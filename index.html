@@ -1,0 +1,3923 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#1B2B4A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Spitia+">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2280%22%3E%F0%9F%94%91%3C/text%3E%3C/svg%3E">
+  <title>Spitia+ [PRUEBAS]</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;height:100dvh;overflow:hidden;background:#1B2B4A}
+    :root{padding-bottom:env(safe-area-inset-bottom,0px)}
+    #root{height:100%;font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
+    input,textarea,button,select{font-family:inherit}
+    input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+    ::-webkit-scrollbar{width:0px}
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"></script>
+  <script type="text/babel" data-presets="react">const {
+  useState,
+  useEffect
+} = React;
+const DB_URL = "TU_DATABASE_URL_DE_PRUEBAS";
+const AUTH_API_KEY = "TU_API_KEY_DE_PRUEBAS";
+const BG_MADRID = "data:image/webp;base64,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";
+const bgMadridStyle = {
+  backgroundImage: `url(${BG_MADRID})`,
+  backgroundSize: "cover",
+  backgroundPosition: "center",
+  backgroundRepeat: "no-repeat"
+};
+const _deobf = (b64, key = 37) => {
+  const raw = atob(b64);
+  let out = "";
+  for (let i = 0; i < raw.length; i++) out += String.fromCharCode(raw.charCodeAt(i) ^ key);
+  return out;
+};
+const KN = {
+  telefono: _deobf("ExcRBRQXBRQWBRMV"),
+  whatsapp: _deobf("FhETFxEUFxQWExU="),
+  agente: "Eduardo"
+};
+const APP_URL = "TU_URL_DE_PRUEBAS";
+const LS_DATA = "kn_conserje_plus_v1";
+const LS_SESSION = "kn_conserje_session_v1";
+const IS_LOCAL = DB_URL === "LOCAL";
+const AUTH_READY = !IS_LOCAL && /^AIza[0-9A-Za-z_-]{35}$/.test(AUTH_API_KEY);
+if (!IS_LOCAL && !AUTH_READY) {
+  console.warn("⚠️ AUTH_API_KEY sin configurar o con formato inválido: la app funciona, pero sin autenticación anónima. Revísala antes de cerrar las reglas de la base de datos.");
+}
+const LS_ANON_REFRESH = "kn_anon_refresh_v1";
+
+// ── NOTIFICACIONES PUSH ──────────────────────────────────────────────────
+// Estos 3 datos se sacan de Firebase Console → ⚙️ Configuración del proyecto
+// → General → "Tus apps" → la app web (el mismo sitio donde está AUTH_API_KEY,
+// solo que ahí solo copiamos un campo; esta vez hacen falta estos dos más).
+const MSG_SENDER_ID = "TU_SENDER_ID";
+const MSG_APP_ID = "TU_APP_ID";
+// Este es distinto: Firebase Console → ⚙️ Configuración del proyecto →
+// pestaña "Cloud Messaging" → apartado "Configuración web" → "Generar par de claves".
+const VAPID_KEY = "TU_VAPID_KEY";
+
+const PUSH_READY = !IS_LOCAL && MSG_SENDER_ID !== "TU_SENDER_ID" && MSG_APP_ID !== "TU_APP_ID" && VAPID_KEY !== "TU_VAPID_KEY" && typeof firebase !== "undefined" && "serviceWorker" in navigator && "Notification" in window;
+
+if (PUSH_READY && !firebase.apps.length) {
+  firebase.initializeApp({
+    apiKey: AUTH_API_KEY,
+    projectId: "TU_PROJECT_ID_DE_PRUEBAS",
+    messagingSenderId: MSG_SENDER_ID,
+    appId: MSG_APP_ID
+  });
+}
+
+const Push = {
+  // Pide permiso, registra el service worker y guarda el token en el
+  // propio registro del colaborador. Devuelve true/false según el resultado.
+  activar: async function (code) {
+    if (!PUSH_READY) return false;
+    try {
+      const permiso = await Notification.requestPermission();
+      if (permiso !== "granted") return false;
+      const reg = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
+      const messaging = firebase.messaging();
+      const token = await messaging.getToken({
+        vapidKey: VAPID_KEY,
+        serviceWorkerRegistration: reg
+      });
+      if (!token) return false;
+      await DB.patchChild("conserjes", code, {
+        fcmToken: token
+      });
+      return true;
+    } catch (e) {
+      console.error("Push.activar:", e);
+      return false;
+    }
+  },
+  // Comprueba si el navegador ya tiene permiso concedido (no si el token
+  // sigue siendo válido — solo el estado del permiso del propio navegador).
+  yaActivado: function () {
+    return PUSH_READY && Notification.permission === "granted";
+  }
+};
+const Auth = {
+  _token: null,
+  _expiry: 0,
+  _mode: null,
+  signInAnon: async function () {
+    const savedRefresh = localStorage.getItem(LS_ANON_REFRESH);
+    if (savedRefresh) {
+      try {
+        const r = await fetch(`https://securetoken.googleapis.com/v1/token?key=${AUTH_API_KEY}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: `grant_type=refresh_token&refresh_token=${encodeURIComponent(savedRefresh)}`
+        });
+        const data = await r.json();
+        if (data.id_token) {
+          this._token = data.id_token;
+          this._expiry = Date.now() + parseInt(data.expires_in || "3600", 10) * 1000 - 120000;
+          this._mode = "anon";
+          if (data.refresh_token) localStorage.setItem(LS_ANON_REFRESH, data.refresh_token);
+          return this._token;
+        }
+      } catch (e) {}
+    }
+    const r = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${AUTH_API_KEY}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        returnSecureToken: true
+      })
+    });
+    const data = await r.json();
+    if (!data.idToken) throw new Error("Auth: respuesta sin idToken");
+    this._token = data.idToken;
+    this._expiry = Date.now() + parseInt(data.expiresIn || "3600", 10) * 1000 - 120000;
+    this._mode = "anon";
+    if (data.refreshToken) {
+      try {
+        localStorage.setItem(LS_ANON_REFRESH, data.refreshToken);
+      } catch {}
+    }
+    return this._token;
+  },
+  signInAdmin: async function (email, password) {
+    const r = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${AUTH_API_KEY}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email,
+        password,
+        returnSecureToken: true
+      })
+    });
+    const data = await r.json();
+    if (data.error) {
+      const code = data.error.message || "";
+      const friendly = /INVALID_LOGIN_CREDENTIALS|INVALID_PASSWORD|EMAIL_NOT_FOUND/.test(code) ? "Email o contraseña incorrectos." : /TOO_MANY_ATTEMPTS/.test(code) ? "Demasiados intentos. Espera unos minutos." : "No se pudo iniciar sesión. Inténtalo de nuevo.";
+      throw new Error(friendly);
+    }
+    this._token = data.idToken;
+    this._expiry = Date.now() + parseInt(data.expiresIn || "3600", 10) * 1000 - 120000;
+    this._mode = "admin";
+    return {
+      token: this._token,
+      uid: data.localId
+    };
+  },
+  getToken: async function () {
+    if (!AUTH_READY) return null;
+    if (this._token && Date.now() < this._expiry) return this._token;
+    try {
+      return await this.signInAnon();
+    } catch (e) {
+      console.error("Auth error:", e);
+      return null;
+    }
+  },
+  signOut: function () {
+    this._token = null;
+    this._expiry = 0;
+    this._mode = null;
+  }
+};
+const toArray = raw => {
+  if (!raw) return [];
+  if (Array.isArray(raw)) return raw.filter(Boolean);
+  return Object.entries(raw).map(([key, val]) => ({
+    ...val,
+    id: val && val.id ? val.id : key
+  }));
+};
+const DB = {
+  normalize: raw => ({
+    conserjes: toArray(raw && raw.conserjes),
+    avisos: toArray(raw && raw.avisos),
+    alertas: toArray(raw && raw.alertas),
+    anuncios: toArray(raw && raw.anuncios)
+  }),
+  _authedUrl: async function (path) {
+    const token = await Auth.getToken();
+    return `${DB_URL}/kn_conserje_plus_v1/${path}.json${token ? `?auth=${token}` : ""}`;
+  },
+  _get: async function (path) {
+    try {
+      const url = await this._authedUrl(path);
+      const r = await fetch(url);
+      if (!r.ok) {
+        console.error(`DB get ${path}: Firebase respondió`, r.status);
+        return null;
+      }
+      return await r.json();
+    } catch (e) {
+      console.error(`DB get ${path}:`, e);
+      return null;
+    }
+  },
+  saveLocal: data => {
+    try {
+      localStorage.setItem(LS_DATA, JSON.stringify(data));
+    } catch {}
+  },
+  loadLocal: function () {
+    try {
+      return this.normalize(JSON.parse(localStorage.getItem(LS_DATA)));
+    } catch {
+      return this.normalize(null);
+    }
+  },
+  loadAll: async function () {
+    if (IS_LOCAL) return this.loadLocal();
+    const data = await this._get("");
+    return this.normalize(data);
+  },
+  loadForConserje: async function (code) {
+    if (IS_LOCAL) return this.loadLocal();
+    const [miConserje, avisos, alertas, anuncios] = await Promise.all([this._get(`conserjes/${code}`), this._get("avisos"), this._get("alertas"), this._get("anuncios")]);
+    return {
+      conserjes: miConserje ? [{
+        ...miConserje,
+        id: miConserje.id || code
+      }] : [],
+      avisos: toArray(avisos),
+      alertas: toArray(alertas),
+      anuncios: toArray(anuncios)
+    };
+  },
+  fetchConserje: async function (code) {
+    if (IS_LOCAL) {
+      const data = this.loadLocal();
+      return data.conserjes.find(c => c.id === code) || null;
+    }
+    const data = await this._get(`conserjes/${code}`);
+    return data ? {
+      ...data,
+      id: data.id || code
+    } : null;
+  },
+  putChild: async function (collection, id, record) {
+    const url = await this._authedUrl(`${collection}/${id}`);
+    const r = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(record)
+    });
+    if (!r.ok) throw new Error(`No se pudo guardar (Firebase ${r.status}). Puede que tu sesión haya caducado.`);
+  },
+  patchChild: async function (collection, id, partial) {
+    const url = await this._authedUrl(`${collection}/${id}`);
+    const r = await fetch(url, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(partial)
+    });
+    if (!r.ok) throw new Error(`No se pudo guardar (Firebase ${r.status}). Puede que tu sesión haya caducado.`);
+  },
+  pushChild: async function (collection, record) {
+    const url = await this._authedUrl(collection);
+    const r = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(record)
+    });
+    if (!r.ok) throw new Error(`No se pudo guardar (Firebase ${r.status}). Puede que tu sesión haya caducado.`);
+    const data = await r.json();
+    return data.name;
+  }
+};
+const Actions = {
+  addConserje: async (code, record) => {
+    if (IS_LOCAL) {
+      const current = DB.loadLocal();
+      const updated = {
+        ...current,
+        conserjes: [...current.conserjes, record]
+      };
+      DB.saveLocal(updated);
+      return;
+    }
+    await DB.putChild("conserjes", code, record);
+  },
+  patchConserje: async (appDataRef, code, partial) => {
+    const updated = {
+      ...appDataRef,
+      conserjes: appDataRef.conserjes.map(c => c.id === code ? {
+        ...c,
+        ...partial
+      } : c)
+    };
+    if (IS_LOCAL) {
+      DB.saveLocal(updated);
+    } else {
+      await DB.patchChild("conserjes", code, partial);
+    }
+    return updated;
+  },
+  pushItem: async (appDataRef, collection, record) => {
+    if (IS_LOCAL) {
+      if (!record.id) record.id = Date.now();
+      const updated = {
+        ...appDataRef,
+        [collection]: [record, ...appDataRef[collection]]
+      };
+      DB.saveLocal(updated);
+      return updated;
+    }
+    const key = await DB.pushChild(collection, record);
+    record.id = key;
+    return {
+      ...appDataRef,
+      [collection]: [record, ...appDataRef[collection]]
+    };
+  },
+  patchItem: async (appDataRef, collection, id, partial) => {
+    const updated = {
+      ...appDataRef,
+      [collection]: appDataRef[collection].map(x => x.id === id ? {
+        ...x,
+        ...partial
+      } : x)
+    };
+    if (IS_LOCAL) {
+      DB.saveLocal(updated);
+    } else {
+      await DB.patchChild(collection, id, partial);
+    }
+    return updated;
+  }
+};
+const Session = {
+  get: () => {
+    try {
+      return JSON.parse(localStorage.getItem(LS_SESSION));
+    } catch {
+      return null;
+    }
+  },
+  set: s => {
+    try {
+      localStorage.setItem(LS_SESSION, JSON.stringify(s));
+    } catch {}
+  },
+  clear: () => {
+    try {
+      localStorage.removeItem(LS_SESSION);
+    } catch {}
+  }
+};
+const C = {
+  navy: "#1B2B4A",
+  navyMid: "#243860",
+  gold: "#C49A3C",
+  goldBg: "#FBF3E0",
+  cream: "#F7F5F0",
+  white: "#FFFFFF",
+  green: "#1E7A45",
+  greenBg: "#E4F5EC",
+  amber: "#B56A10",
+  amberBg: "#FEF3E4",
+  blue: "#3A52C0",
+  blueBg: "#EEF0FF",
+  purple: "#6B3FA0",
+  purpleBg: "#F1EAFB",
+  teal: "#0E7C86",
+  tealBg: "#E1F3F4",
+  red: "#C0392B",
+  redBg: "#FDECEA",
+  gray: "#8B91AB",
+  border: "#E8E4DC",
+  wa: "#25D366"
+};
+const TIPOS = {
+  venta: {
+    label: "Piso en venta",
+    emoji: "🏠",
+    color: C.green,
+    bg: C.greenBg,
+    estrellas: 5
+  },
+  alquiler: {
+    label: "Piso en alquiler",
+    emoji: "🔑",
+    color: C.blue,
+    bg: C.blueBg,
+    estrellas: 3
+  },
+  propietario: {
+    label: "Propietario interesado",
+    emoji: "👤",
+    color: C.gold,
+    bg: C.goldBg,
+    estrellas: 1
+  },
+  vacio: {
+    label: "Piso vacío / en obra",
+    emoji: "🏚️",
+    color: C.amber,
+    bg: C.amberBg,
+    estrellas: 1
+  },
+  nota: {
+    label: "Nota / dato relevante",
+    emoji: "📝",
+    color: C.purple,
+    bg: C.purpleBg,
+    estrellas: 1
+  },
+  colaborador: {
+    label: "Sugerir colaborador",
+    emoji: "🤝",
+    color: C.teal,
+    bg: C.tealBg,
+    estrellas: 5
+  }
+};
+const genCode = () => {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let s = "";
+  for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  return `SP-${s}`;
+};
+const fdate = () => new Date().toLocaleDateString("es-ES", {
+  day: "numeric",
+  month: "short",
+  year: "2-digit"
+});
+const initials = name => name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
+const totalEstrellas = (avisos, conserjeId) => avisos.filter(a => a.conserjeId === conserjeId && a.validado).reduce((s, a) => s + (TIPOS[a.tipo]?.estrellas || 0), 0);
+const estrellasPendientes = (avisos, conserjeId) => avisos.filter(a => a.conserjeId === conserjeId && !a.validado).reduce((s, a) => s + (TIPOS[a.tipo]?.estrellas || 0), 0);
+const validarTelefono = tel => {
+  let d = tel.replace(/[\s\-\.\(\)]/g, "");
+  if (d.startsWith("00")) d = d.slice(2);
+  if (d.startsWith("+")) d = d.slice(1);
+  return /^\d{7,15}$/.test(d);
+};
+const validarPIN = p => /^\d{4}$/.test(p);
+const Home = ({
+  size = 22,
+  color = "currentColor",
+  strokeWidth = 2
+}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9,22 9,12 15,12 15,22" /></svg>;
+const Bell = ({
+  size = 22,
+  color = "currentColor",
+  strokeWidth = 2
+}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>;
+const ClipList = ({
+  size = 22,
+  color = "currentColor",
+  strokeWidth = 2
+}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="18" rx="2" /><line x1="8" y1="8" x2="16" y2="8" /><line x1="8" y1="12" x2="16" y2="12" /><line x1="8" y1="16" x2="13" y2="16" /></svg>;
+const User = ({
+  size = 22,
+  color = "currentColor",
+  strokeWidth = 2
+}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>;
+const Plus = ({
+  size = 22,
+  color = "currentColor",
+  strokeWidth = 2
+}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>;
+const X = ({
+  size = 14,
+  color = "currentColor",
+  strokeWidth = 2
+}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>;
+const Check = ({
+  size = 14,
+  color = "currentColor",
+  strokeWidth = 2.5
+}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"><polyline points="20,6 9,17 4,12" /></svg>;
+const Phone = ({
+  size = 15,
+  color = "currentColor"
+}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.13 11.9 19.79 19.79 0 0 1 1.08 3.27 2 2 0 0 1 3.06 1h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" /></svg>;
+const Mail = ({
+  size = 15,
+  color = "currentColor"
+}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>;
+const MapPin = ({
+  size = 15,
+  color = "currentColor"
+}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>;
+const LogOut = ({
+  size = 15,
+  color = "currentColor"
+}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16,17 21,12 16,7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>;
+const Users = ({
+  size = 20,
+  color = "currentColor",
+  strokeWidth = 2
+}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>;
+const TrendingUp = ({
+  size = 20,
+  color = "currentColor",
+  strokeWidth = 2
+}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"><polyline points="23,6 13.5,15.5 8.5,10.5 1,18" /><polyline points="17,6 23,6 23,12" /></svg>;
+const ArrowLeft = ({
+  size = 18,
+  color = "currentColor",
+  strokeWidth = 2
+}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12" /><polyline points="12,19 5,12 12,5" /></svg>;
+const Megaphone = ({
+  size = 22,
+  color = "currentColor",
+  strokeWidth = 2
+}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"><path d="M3 11l18-5v12L3 13v-2z" /><path d="M11.6 16.8a3 3 0 0 1-5.8-1.6" /></svg>;
+const Star = ({
+  size = 16,
+  color = "currentColor",
+  filled = true
+}) => <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? color : "none"} stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" /></svg>;
+const Trash2 = ({
+  size = 14,
+  color = "currentColor"
+}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3,6 5,6 21,6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></svg>;
+function WAIcon({
+  size = 18
+}) {
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+        </svg>;
+}
+function Badge({
+  estado
+}) {
+  const m = {
+    cerrada: {
+      l: "Cerrada",
+      bg: C.greenBg,
+      c: C.green
+    },
+    en_gestion: {
+      l: "En gestión",
+      bg: C.amberBg,
+      c: C.amber
+    },
+    pendiente: {
+      l: "Pendiente",
+      bg: C.blueBg,
+      c: C.blue
+    },
+    leida: {
+      l: "Leída",
+      bg: "#EEE",
+      c: C.gray
+    }
+  };
+  const s = m[estado] || m.pendiente;
+  return <span style={{
+    background: s.bg,
+    color: s.c,
+    fontSize: 11.5,
+    fontWeight: 700,
+    padding: "3px 8px",
+    borderRadius: 99,
+    textTransform: "uppercase",
+    letterSpacing: "0.04em",
+    whiteSpace: "nowrap"
+  }}>{s.l}</span>;
+}
+function TipoTag({
+  tipo
+}) {
+  const t = TIPOS[tipo] || TIPOS.nota;
+  return <span style={{
+    background: t.bg,
+    color: t.color,
+    fontSize: 11.5,
+    fontWeight: 700,
+    padding: "3px 8px",
+    borderRadius: 99,
+    whiteSpace: "nowrap"
+  }}>{t.emoji} {t.label}</span>;
+}
+function Toast({
+  msg
+}) {
+  return <div style={{
+    position: "fixed",
+    top: 68,
+    left: "50%",
+    transform: "translateX(-50%)",
+    zIndex: 999,
+    background: C.navy,
+    color: "white",
+    padding: "10px 18px",
+    borderRadius: 12,
+    fontSize: 14.5,
+    fontWeight: 600,
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    boxShadow: "0 4px 20px rgba(0,0,0,0.25)",
+    maxWidth: "85%",
+    textAlign: "center",
+    pointerEvents: "none"
+  }}>
+          <Check size={15} color="#4CAF50" strokeWidth={2.5} /> {msg}
+        </div>;
+}
+function Modal({
+  onClose,
+  children
+}) {
+  return <div style={{
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.55)",
+    zIndex: 400,
+    display: "flex",
+    alignItems: "flex-end",
+    justifyContent: "center"
+  }} onClick={onClose}>
+          <div style={{
+      width: "100%",
+      maxWidth: 440,
+      maxHeight: "88vh",
+      overflowY: "auto",
+      background: C.white,
+      borderRadius: "20px 20px 0 0",
+      padding: "22px 18px 40px"
+    }} onClick={e => e.stopPropagation()}>
+            {children}
+          </div>
+        </div>;
+}
+function ModalHeader({
+  title,
+  onClose
+}) {
+  return <div style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16
+  }}>
+          <span style={{
+      fontSize: 17,
+      fontWeight: 700,
+      color: C.navy
+    }}>{title}</span>
+          <button onClick={onClose} style={{
+      background: C.cream,
+      border: "none",
+      borderRadius: "50%",
+      width: 28,
+      height: 28,
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }}><X size={15} color={C.gray} /></button>
+        </div>;
+}
+function AppShell({
+  header,
+  children,
+  nav
+}) {
+  return <div style={{
+    maxWidth: 440,
+    margin: "0 auto",
+    height: "100vh",
+    maxHeight: "100dvh",
+    background: C.cream,
+    display: "flex",
+    flexDirection: "column",
+    fontFamily: "-apple-system, 'Segoe UI', sans-serif",
+    position: "relative"
+  }}>
+          <div style={{
+      background: C.navy,
+      padding: "12px 18px 16px",
+      flexShrink: 0
+    }}>{header}</div>
+          <div style={{
+      height: 3,
+      background: C.gold,
+      flexShrink: 0
+    }} />
+          <div style={{
+      flex: 1,
+      overflowY: "auto",
+      paddingTop: 16
+    }}>{children}</div>
+          {nav && <div style={{
+      background: C.white,
+      borderTop: `1px solid ${C.border}`,
+      display: "flex",
+      paddingBottom: "calc(14px + env(safe-area-inset-bottom, 10px))",
+      paddingTop: 8,
+      flexShrink: 0
+    }}>{nav}</div>}
+        </div>;
+}
+function NavBtn({
+  active,
+  label,
+  Icon,
+  onClick,
+  badge
+}) {
+  return <button onClick={onClick} style={{
+    flex: 1,
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 3,
+    padding: "4px 0",
+    color: active ? C.navy : "#B4B8D0",
+    position: "relative"
+  }}>
+          <div style={{
+      position: "relative"
+    }}>
+            <Icon size={20} color={active ? C.navy : "#B4B8D0"} strokeWidth={active ? 2.5 : 2} />
+            {badge > 0 && <div style={{
+        position: "absolute",
+        top: -4,
+        right: -8,
+        background: C.red,
+        color: "white",
+        fontSize: 10,
+        fontWeight: 800,
+        borderRadius: 99,
+        minWidth: 14,
+        height: 14,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "0 3px"
+      }}>{badge}</div>}
+          </div>
+          <span style={{
+      fontSize: 11,
+      fontWeight: active ? 700 : 500
+    }}>{label}</span>
+          {active && <div style={{
+      width: 4,
+      height: 4,
+      borderRadius: "50%",
+      background: C.gold
+    }} />}
+        </button>;
+}
+function StatCard({
+  value,
+  label,
+  sub,
+  gold
+}) {
+  return <div style={{
+    background: C.white,
+    borderRadius: 12,
+    padding: "12px 10px",
+    textAlign: "center",
+    border: `1px solid ${C.border}`
+  }}>
+          <div style={{
+      fontSize: 21,
+      fontWeight: 800,
+      color: gold ? C.gold : C.navy
+    }}>{value}</div>
+          <div style={{
+      fontSize: 12.5,
+      fontWeight: 700,
+      color: C.navy,
+      marginTop: 1
+    }}>{label}</div>
+          {sub && <div style={{
+      fontSize: 11.5,
+      color: C.gray
+    }}>{sub}</div>}
+        </div>;
+}
+function EmptyState({
+  emoji,
+  text,
+  sub
+}) {
+  return <div style={{
+    textAlign: "center",
+    padding: "40px 20px",
+    color: C.gray
+  }}>
+          <div style={{
+      fontSize: 32.5,
+      marginBottom: 10,
+      opacity: 0.5
+    }}>{emoji}</div>
+          <div style={{
+      fontSize: 14.5,
+      fontWeight: 600
+    }}>{text}</div>
+          {sub && <div style={{
+      fontSize: 12.5,
+      marginTop: 4,
+      opacity: 0.8
+    }}>{sub}</div>}
+        </div>;
+}
+function WelcomeScreen({
+  onGoRegister,
+  onGoLogin,
+  onGoAdmin
+}) {
+  return <div style={{
+    maxWidth: 440,
+    margin: "0 auto",
+    height: "100vh",
+    maxHeight: "100dvh",
+    overflowY: "auto",
+    background: C.navy,
+    ...bgMadridStyle,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "32px 28px",
+    fontFamily: "-apple-system, 'Segoe UI', sans-serif",
+    position: "relative"
+  }}>
+          <div style={{
+      width: 76,
+      height: 76,
+      borderRadius: "50%",
+      background: C.gold,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 22,
+      boxShadow: "0 8px 32px rgba(196,154,60,0.4)"
+    }}>
+            <Users size={32} color="white" />
+          </div>
+          <div style={{
+      fontSize: 28.5,
+      fontWeight: 900,
+      color: "white",
+      marginBottom: 4,
+      textAlign: "center"
+    }}>Spitia+</div>
+          <div style={{
+      fontSize: 14.5,
+      color: C.gold,
+      fontWeight: 600,
+      marginBottom: 6,
+      textAlign: "center"
+    }}>Red de colaboradores de {KN.agente}</div>
+          <div style={{
+      fontSize: 13.5,
+      color: "rgba(255,255,255,0.5)",
+      marginBottom: 40,
+      textAlign: "center",
+      lineHeight: 1.6
+    }}>
+            Informa sobre pisos, conecta propietarios<br />y recibe recompensas por tus captaciones
+          </div>
+
+          <button onClick={onGoRegister} style={{
+      width: "100%",
+      padding: "16px",
+      borderRadius: 14,
+      border: "none",
+      background: C.gold,
+      color: "white",
+      fontSize: 16.5,
+      fontWeight: 700,
+      cursor: "pointer",
+      marginBottom: 12,
+      boxShadow: "0 4px 20px rgba(196,154,60,0.4)"
+    }}>
+            Darme de alta como colaborador
+          </button>
+          <button onClick={onGoLogin} style={{
+      width: "100%",
+      padding: "15px",
+      borderRadius: 14,
+      border: "1.5px solid rgba(255,255,255,0.2)",
+      background: "transparent",
+      color: "white",
+      fontSize: 15.5,
+      fontWeight: 600,
+      cursor: "pointer"
+    }}>
+            Ya tengo mi código
+          </button>
+
+          <button onClick={onGoAdmin} style={{
+      marginTop: 32,
+      background: "none",
+      border: "none",
+      color: "rgba(255,255,255,0.3)",
+      fontSize: 12.5,
+      cursor: "pointer",
+      textDecoration: "underline"
+    }}>
+            Acceso administrador
+          </button>
+
+          <div style={{
+      position: "absolute",
+      bottom: 16,
+      left: 20,
+      fontSize: 10.5,
+      color: "#7C93E0",
+      opacity: 0.55,
+      fontWeight: 500,
+      letterSpacing: "0.02em"
+    }}>
+            by EE
+          </div>
+        </div>;
+}
+function PoliticaPrivacidadModal({
+  onClose
+}) {
+  const Sec = ({
+    titulo,
+    children
+  }) => <div style={{
+    marginBottom: 16
+  }}>
+          <div style={{
+      fontSize: 13.5,
+      fontWeight: 700,
+      color: C.navy,
+      marginBottom: 5
+    }}>{titulo}</div>
+          <div style={{
+      fontSize: 13,
+      color: C.gray,
+      lineHeight: 1.55
+    }}>{children}</div>
+        </div>;
+  return <Modal onClose={onClose}>
+          <ModalHeader title="Política de privacidad" onClose={onClose} />
+          <div style={{
+      maxHeight: "56vh",
+      overflowY: "auto",
+      paddingRight: 4,
+      marginBottom: 16
+    }}>
+            <Sec titulo="1. Responsable del tratamiento">
+              Eduardo C. Escudero Adán, consultor inmobiliario. Teléfono: {KN.telefono} · Email: eescudero@mail.com · NIF: 72786019N.
+            </Sec>
+            <Sec titulo="2. Para qué usamos tus datos">
+              Tu nombre, sector de actividad, zona o empresa y teléfono se usan solo para gestionar tu colaboración en Spitia+: identificar tus avisos, calcular tus estrellas y comisiones, y contactar contigo. Para ninguna otra finalidad.
+            </Sec>
+            <Sec titulo="3. Base legal">
+              Tu consentimiento expreso, al darte de alta voluntariamente y aceptar esta política.
+            </Sec>
+            <Sec titulo="4. Datos de terceros">
+              Nunca se te pide que introduzcas en la app datos personales de propietarios o de personas a las que sugieras como colaboradoras. Cuando avisas de un propietario interesado o sugieres a alguien, la app te da el teléfono de {KN.agente} para que se lo compartas tú mismo directamente.
+            </Sec>
+            <Sec titulo="5. Con quién se comparten">
+              Con nadie fuera de Spitia+. No se ceden a agencias, empresas ni terceros.
+            </Sec>
+            <Sec titulo="6. Cuánto tiempo se conservan">
+              Mientras estés dado de alta, y tras la baja el tiempo que exija la ley (por ejemplo, por obligaciones fiscales sobre comisiones ya pagadas).
+            </Sec>
+            <Sec titulo="7. Tus derechos">
+              Acceso, rectificación, supresión, oposición, limitación y portabilidad. Puedes solicitar el borrado de tus datos en cualquier momento desde "Perfil". Si no queda resuelto, puedes reclamar ante la AEPD (www.aepd.es).
+            </Sec>
+            <Sec titulo="8. Seguridad">
+              Aplicamos medidas razonables para proteger tus datos, aunque ningún sistema es 100% infalible.
+            </Sec>
+            <Sec titulo="9. Menores">
+              Spitia+ no está dirigida a menores de edad.
+            </Sec>
+          </div>
+          <button onClick={onClose} style={{
+      width: "100%",
+      background: C.navy,
+      color: "white",
+      border: "none",
+      borderRadius: 12,
+      padding: "13px",
+      fontSize: 15,
+      fontWeight: 700,
+      cursor: "pointer"
+    }}>
+            Entendido
+          </button>
+        </Modal>;
+}
+const SECTORES = ["Conserjería", "Construcción / reformas", "Personal shopper inmobiliario", "Administración de fincas", "Otro"];
+function RegisterScreen({
+  onBack,
+  onSubmit,
+  loading
+}) {
+  const [nombre, setNombre] = useState("");
+  const [sector, setSector] = useState("");
+  const [sectorOtro, setSectorOtro] = useState("");
+  const [edificio, setEdificio] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [telTouched, setTelTouched] = useState(false);
+  const [pin, setPin] = useState("");
+  const [pinTouched, setPinTouched] = useState(false);
+  const [aceptaPolitica, setAceptaPolitica] = useState(false);
+  const [showPolitica, setShowPolitica] = useState(false);
+  const telValid = !telefono.trim() || validarTelefono(telefono);
+  const pinValid = validarPIN(pin);
+  const valid = nombre.trim() && sector && telValid && pinValid && aceptaPolitica;
+  const sectorFinal = sector === "Otro" && sectorOtro.trim() ? sectorOtro.trim() : sector;
+  return <div style={{
+    maxWidth: 440,
+    margin: "0 auto",
+    height: "100vh",
+    maxHeight: "100dvh",
+    overflowY: "auto",
+    background: C.navy,
+    ...bgMadridStyle,
+    display: "flex",
+    flexDirection: "column",
+    padding: "18px 24px 32px",
+    fontFamily: "-apple-system, 'Segoe UI', sans-serif"
+  }}>
+          <button onClick={onBack} style={{
+      background: "none",
+      border: "none",
+      color: "rgba(255,255,255,0.6)",
+      display: "flex",
+      alignItems: "center",
+      gap: 6,
+      cursor: "pointer",
+      fontSize: 14.5,
+      padding: "8px 0",
+      marginBottom: 20,
+      alignSelf: "flex-start"
+    }}>
+            <ArrowLeft size={16} /> Volver
+          </button>
+
+          <div style={{
+      fontSize: 22.5,
+      fontWeight: 800,
+      color: "white",
+      marginBottom: 4
+    }}>Alta de colaborador</div>
+          <div style={{
+      fontSize: 13.5,
+      color: "rgba(255,255,255,0.5)",
+      marginBottom: 30,
+      lineHeight: 1.5
+    }}>Solo necesitamos unos datos básicos. Tu código se genera al instante.</div>
+
+          <label style={{
+      fontSize: 12.5,
+      fontWeight: 600,
+      color: "rgba(255,255,255,0.5)",
+      display: "block",
+      marginBottom: 6,
+      textTransform: "uppercase",
+      letterSpacing: "0.05em"
+    }}>Nombre completo</label>
+          <input value={nombre} onChange={e => setNombre(e.target.value)} placeholder="Ej: Antonio García" style={{
+      width: "100%",
+      padding: "13px 14px",
+      borderRadius: 12,
+      border: "1.5px solid rgba(255,255,255,0.15)",
+      background: "rgba(255,255,255,0.07)",
+      fontSize: 15.5,
+      color: "white",
+      outline: "none",
+      boxSizing: "border-box",
+      marginBottom: 16
+    }} />
+
+          <label style={{
+      fontSize: 12.5,
+      fontWeight: 600,
+      color: "rgba(255,255,255,0.5)",
+      display: "block",
+      marginBottom: 8,
+      textTransform: "uppercase",
+      letterSpacing: "0.05em"
+    }}>¿A qué te dedicas?</label>
+          <div style={{
+      display: "flex",
+      flexWrap: "wrap",
+      gap: 8,
+      marginBottom: sector === "Otro" ? 10 : 16
+    }}>
+            {SECTORES.map(s => <button key={s} onClick={() => setSector(s)} style={{
+        padding: "9px 14px",
+        borderRadius: 10,
+        border: `1.5px solid ${sector === s ? C.gold : "rgba(255,255,255,0.15)"}`,
+        background: sector === s ? "rgba(196,154,60,0.18)" : "rgba(255,255,255,0.07)",
+        color: sector === s ? C.gold : "rgba(255,255,255,0.75)",
+        fontSize: 13.5,
+        fontWeight: 600,
+        cursor: "pointer"
+      }}>
+                {s}
+              </button>)}
+          </div>
+          {sector === "Otro" && <input value={sectorOtro} onChange={e => setSectorOtro(e.target.value)} placeholder="¿Cuál? (opcional)" style={{
+      width: "100%",
+      padding: "12px 14px",
+      borderRadius: 12,
+      border: "1.5px solid rgba(255,255,255,0.15)",
+      background: "rgba(255,255,255,0.07)",
+      fontSize: 14.5,
+      color: "white",
+      outline: "none",
+      boxSizing: "border-box",
+      marginBottom: 16
+    }} />}
+
+          <label style={{
+      fontSize: 12.5,
+      fontWeight: 600,
+      color: "rgba(255,255,255,0.5)",
+      display: "block",
+      marginBottom: 6,
+      textTransform: "uppercase",
+      letterSpacing: "0.05em"
+    }}>Zona, empresa o dirección (opcional)</label>
+          <input value={edificio} onChange={e => setEdificio(e.target.value)} placeholder="Ej: Chamberí, o el nombre de tu empresa" style={{
+      width: "100%",
+      padding: "13px 14px",
+      borderRadius: 12,
+      border: "1.5px solid rgba(255,255,255,0.15)",
+      background: "rgba(255,255,255,0.07)",
+      fontSize: 15.5,
+      color: "white",
+      outline: "none",
+      boxSizing: "border-box",
+      marginBottom: 16
+    }} />
+
+          <label style={{
+      fontSize: 12.5,
+      fontWeight: 600,
+      color: "rgba(255,255,255,0.5)",
+      display: "block",
+      marginBottom: 6,
+      textTransform: "uppercase",
+      letterSpacing: "0.05em"
+    }}>Teléfono (opcional)</label>
+          <input value={telefono} onChange={e => setTelefono(e.target.value)} onBlur={() => setTelTouched(true)} placeholder="Ej: +34 600 123 456 o +41 79 123 45 67" style={{
+      width: "100%",
+      padding: "13px 14px",
+      borderRadius: 12,
+      border: `1.5px solid ${telTouched && !telValid ? C.red : "rgba(255,255,255,0.15)"}`,
+      background: "rgba(255,255,255,0.07)",
+      fontSize: 15.5,
+      color: "white",
+      outline: "none",
+      boxSizing: "border-box",
+      marginBottom: telTouched && !telValid ? 6 : 16
+    }} />
+          {telTouched && !telValid && <div style={{
+      fontSize: 13,
+      color: "#FF8A8A",
+      marginBottom: 22
+    }}>Introduce un número de teléfono válido, con prefijo de país si es de fuera de España (ej. +41 para Suiza).</div>}
+
+          <label style={{
+      fontSize: 12.5,
+      fontWeight: 600,
+      color: "rgba(255,255,255,0.5)",
+      display: "block",
+      marginBottom: 6,
+      textTransform: "uppercase",
+      letterSpacing: "0.05em"
+    }}>Elige un PIN de 4 dígitos</label>
+          <input value={pin} onChange={e => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))} onBlur={() => setPinTouched(true)} inputMode="numeric" maxLength={4} placeholder="Ej: 4821" style={{
+      width: "100%",
+      padding: "13px 14px",
+      borderRadius: 12,
+      border: `1.5px solid ${pinTouched && !pinValid ? C.red : "rgba(255,255,255,0.15)"}`,
+      background: "rgba(255,255,255,0.07)",
+      fontSize: 17,
+      fontWeight: 700,
+      letterSpacing: "0.3em",
+      color: "white",
+      outline: "none",
+      boxSizing: "border-box",
+      marginBottom: pinTouched && !pinValid ? 6 : 8
+    }} />
+          {pinTouched && !pinValid && <div style={{
+      fontSize: 13,
+      color: "#FF8A8A",
+      marginBottom: 8
+    }}>Tiene que tener exactamente 4 dígitos.</div>}
+          <div style={{
+      fontSize: 12,
+      color: "rgba(255,255,255,0.4)",
+      marginBottom: 22,
+      lineHeight: 1.5
+    }}>Te lo pedirá junto al código si algún día entras desde otro móvil. Elige uno que recuerdes.</div>
+
+          <label style={{
+      display: "flex",
+      alignItems: "flex-start",
+      gap: 10,
+      cursor: "pointer",
+      marginBottom: 20
+    }}>
+            <input type="checkbox" checked={aceptaPolitica} onChange={e => setAceptaPolitica(e.target.checked)} style={{
+        width: 19,
+        height: 19,
+        marginTop: 1,
+        flexShrink: 0,
+        accentColor: C.gold,
+        cursor: "pointer"
+      }} />
+            <span style={{
+        fontSize: 13,
+        color: "rgba(255,255,255,0.75)",
+        lineHeight: 1.5
+      }}>
+              He leído y acepto la{" "}
+              <span onClick={e => {
+          e.preventDefault();
+          setShowPolitica(true);
+        }} style={{
+          color: C.gold,
+          textDecoration: "underline",
+          cursor: "pointer"
+        }}>
+                política de privacidad
+              </span>
+              {" "}— mis datos solo se usan en Spitia+ y no se comparten con nadie.
+            </span>
+          </label>
+
+          <button onClick={() => {
+      setTelTouched(true);
+      setPinTouched(true);
+      valid && onSubmit(nombre.trim(), sectorFinal, edificio.trim(), telefono.trim(), pin);
+    }} disabled={!valid || loading} style={{
+      width: "100%",
+      padding: "16px",
+      borderRadius: 14,
+      border: "none",
+      background: valid ? C.gold : "rgba(255,255,255,0.1)",
+      color: "white",
+      fontSize: 16.5,
+      fontWeight: 700,
+      cursor: valid ? "pointer" : "default"
+    }}>
+            {loading ? "Creando tu cuenta..." : "Completar alta"}
+          </button>
+
+          <div style={{
+      marginTop: 20,
+      fontSize: 11.5,
+      color: "rgba(255,255,255,0.3)",
+      textAlign: "center",
+      lineHeight: 1.6
+    }}>
+            Al darte de alta aceptas colaborar en exclusiva con {KN.agente}<br />para las captaciones que compartas a través de esta app.
+          </div>
+
+          {showPolitica && <PoliticaPrivacidadModal onClose={() => setShowPolitica(false)} />}
+        </div>;
+}
+function BienvenidaModal({
+  code,
+  pin,
+  nombre,
+  onClose
+}) {
+  return <Modal onClose={onClose}>
+          <div style={{
+      textAlign: "center",
+      padding: "8px 4px"
+    }}>
+            <div style={{
+        width: 60,
+        height: 60,
+        borderRadius: "50%",
+        background: C.greenBg,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        margin: "0 auto 18px"
+      }}>
+              <Check size={26} color={C.green} strokeWidth={2.5} />
+            </div>
+            <div style={{
+        fontSize: 19,
+        fontWeight: 800,
+        color: C.navy,
+        marginBottom: 8
+      }}>¡Bienvenido, {nombre.split(" ")[0]}!</div>
+            <div style={{
+        fontSize: 13.5,
+        color: C.gray,
+        marginBottom: 18,
+        lineHeight: 1.5
+      }}>Ya formas parte de la red Spitia+.<br />Apunta tu código y tu PIN — los necesitarás si algún día entras desde otro móvil:</div>
+            <div style={{
+        display: "flex",
+        gap: 10,
+        marginBottom: 24,
+        justifyContent: "center"
+      }}>
+              <div style={{
+          background: C.goldBg,
+          border: "1px solid #F0DFA8",
+          borderRadius: 14,
+          padding: "12px 18px"
+        }}>
+                <div style={{
+            fontSize: 9.5,
+            color: "#8B6A1A",
+            opacity: 0.75,
+            textTransform: "uppercase",
+            letterSpacing: "0.06em",
+            marginBottom: 2
+          }}>Código</div>
+                <div style={{
+            fontSize: 18,
+            fontWeight: 900,
+            color: "#8B6A1A",
+            letterSpacing: "0.03em"
+          }}>{code}</div>
+              </div>
+              <div style={{
+          background: C.goldBg,
+          border: "1px solid #F0DFA8",
+          borderRadius: 14,
+          padding: "12px 18px"
+        }}>
+                <div style={{
+            fontSize: 9.5,
+            color: "#8B6A1A",
+            opacity: 0.75,
+            textTransform: "uppercase",
+            letterSpacing: "0.06em",
+            marginBottom: 2
+          }}>PIN</div>
+                <div style={{
+            fontSize: 18,
+            fontWeight: 900,
+            color: "#8B6A1A",
+            letterSpacing: "0.2em"
+          }}>{pin}</div>
+              </div>
+            </div>
+            <button onClick={onClose} style={{
+        width: "100%",
+        padding: "15px",
+        borderRadius: 14,
+        border: "none",
+        background: C.navy,
+        color: "white",
+        fontSize: 15.5,
+        fontWeight: 700,
+        cursor: "pointer"
+      }}>
+              Empezar
+            </button>
+          </div>
+        </Modal>;
+}
+function LoginScreen({
+  onBack,
+  onLogin,
+  error,
+  loading,
+  isAdmin
+}) {
+  const [code, setCode] = useState("");
+  const [pin, setPin] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const adminValid = email.trim() && password.trim();
+  const conserjeValid = code.trim() && validarPIN(pin);
+  const submit = () => {
+    if (isAdmin) {
+      adminValid && onLogin({
+        email: email.trim(),
+        password
+      });
+    } else {
+      conserjeValid && onLogin({
+        code: code.trim(),
+        pin
+      });
+    }
+  };
+  return <div style={{
+    maxWidth: 440,
+    margin: "0 auto",
+    height: "100vh",
+    maxHeight: "100dvh",
+    overflowY: "auto",
+    background: C.navy,
+    ...bgMadridStyle,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "0 28px",
+    fontFamily: "-apple-system, 'Segoe UI', sans-serif"
+  }}>
+          <button onClick={onBack} style={{
+      position: "absolute",
+      top: 22,
+      left: 22,
+      background: "none",
+      border: "none",
+      color: "rgba(255,255,255,0.6)",
+      display: "flex",
+      alignItems: "center",
+      gap: 6,
+      cursor: "pointer",
+      fontSize: 14.5
+    }}>
+            <ArrowLeft size={16} /> Volver
+          </button>
+          <div style={{
+      width: 60,
+      height: 60,
+      borderRadius: "50%",
+      background: C.gold,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      marginBottom: 18
+    }}>
+            {isAdmin ? <TrendingUp size={26} color="white" /> : <Users size={26} color="white" />}
+          </div>
+          <div style={{
+      fontSize: 20,
+      fontWeight: 800,
+      color: "white",
+      marginBottom: 30
+    }}>{isAdmin ? "Acceso administrador" : "Introduce tu código"}</div>
+          <div style={{
+      width: "100%"
+    }}>
+            {isAdmin ? <>
+                <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" onKeyDown={e => e.key === "Enter" && submit()} autoCapitalize="off" autoCorrect="off" style={{
+          width: "100%",
+          padding: "14px 16px",
+          borderRadius: 14,
+          border: `2px solid ${error ? C.red : "rgba(255,255,255,0.15)"}`,
+          background: "rgba(255,255,255,0.08)",
+          fontSize: 15.5,
+          fontWeight: 600,
+          color: "white",
+          outline: "none",
+          boxSizing: "border-box",
+          marginBottom: 10
+        }} />
+                <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Contraseña" onKeyDown={e => e.key === "Enter" && submit()} style={{
+          width: "100%",
+          padding: "14px 16px",
+          borderRadius: 14,
+          border: `2px solid ${error ? C.red : "rgba(255,255,255,0.15)"}`,
+          background: "rgba(255,255,255,0.08)",
+          fontSize: 15.5,
+          fontWeight: 600,
+          color: "white",
+          outline: "none",
+          boxSizing: "border-box",
+          marginBottom: error ? 8 : 14
+        }} />
+              </> : <>
+                <input value={code} onChange={e => setCode(e.target.value.toUpperCase())} placeholder="Ej: SP-X7K2Q9" onKeyDown={e => e.key === "Enter" && submit()} style={{
+          width: "100%",
+          padding: "15px 16px",
+          borderRadius: 14,
+          border: `2px solid ${error ? C.red : "rgba(255,255,255,0.15)"}`,
+          background: "rgba(255,255,255,0.08)",
+          fontSize: 17,
+          fontWeight: 700,
+          color: "white",
+          outline: "none",
+          boxSizing: "border-box",
+          letterSpacing: "0.05em",
+          marginBottom: 10,
+          textAlign: "center"
+        }} />
+                <input value={pin} onChange={e => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))} inputMode="numeric" maxLength={4} placeholder="PIN (4 dígitos)" onKeyDown={e => e.key === "Enter" && submit()} style={{
+          width: "100%",
+          padding: "15px 16px",
+          borderRadius: 14,
+          border: `2px solid ${error ? C.red : "rgba(255,255,255,0.15)"}`,
+          background: "rgba(255,255,255,0.08)",
+          fontSize: 17,
+          fontWeight: 700,
+          color: "white",
+          outline: "none",
+          boxSizing: "border-box",
+          letterSpacing: "0.3em",
+          marginBottom: error ? 8 : 14,
+          textAlign: "center"
+        }} />
+              </>}
+            {error && <div style={{
+        fontSize: 13.5,
+        color: "#FF7070",
+        marginBottom: 14,
+        textAlign: "center"
+      }}>{error}</div>}
+            <button onClick={submit} disabled={loading || (isAdmin ? !adminValid : !conserjeValid)} style={{
+        width: "100%",
+        padding: "15px",
+        borderRadius: 14,
+        border: "none",
+        background: (isAdmin ? adminValid : conserjeValid) ? C.gold : "rgba(255,255,255,0.1)",
+        color: "white",
+        fontSize: 16.5,
+        fontWeight: 700,
+        cursor: (isAdmin ? adminValid : conserjeValid) ? "pointer" : "default"
+      }}>
+              {loading ? "Verificando..." : "Acceder"}
+            </button>
+          </div>
+        </div>;
+}
+function QuickAction({
+  tipo,
+  onClick,
+  full
+}) {
+  const t = TIPOS[tipo];
+  return <button onClick={onClick} style={{
+    background: C.white,
+    border: `1px solid ${C.border}`,
+    borderRadius: 14,
+    padding: "18px 10px",
+    cursor: "pointer",
+    display: "flex",
+    flexDirection: full ? "row" : "column",
+    alignItems: "center",
+    justifyContent: full ? "center" : "flex-start",
+    gap: full ? 12 : 9,
+    textAlign: full ? "left" : "center",
+    gridColumn: full ? "1 / -1" : "auto"
+  }}>
+          <div style={{
+      width: 46,
+      height: 46,
+      borderRadius: 12,
+      background: t.bg,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: 22.5,
+      flexShrink: 0
+    }}>{t.emoji}</div>
+          <span style={{
+      fontSize: 15,
+      fontWeight: 700,
+      color: C.navy,
+      lineHeight: 1.3
+    }}>{t.label}</span>
+        </button>;
+}
+const LS_ANUNCIOS_VISTOS = "kn_anuncios_vistos_v1";
+const getAnunciosVistos = () => {
+  try {
+    return JSON.parse(localStorage.getItem(LS_ANUNCIOS_VISTOS)) || [];
+  } catch {
+    return [];
+  }
+};
+const marcarAnuncioVisto = id => {
+  const vistos = getAnunciosVistos();
+  if (!vistos.includes(id)) {
+    try {
+      localStorage.setItem(LS_ANUNCIOS_VISTOS, JSON.stringify([...vistos, id]));
+    } catch {}
+  }
+};
+function C_Home({
+  conserje,
+  avisos,
+  alertas,
+  anuncios,
+  onQuickAction,
+  onWhatsapp
+}) {
+  const alertasActivas = alertas.filter(a => a.activa);
+  const tiposKeys = Object.keys(TIPOS);
+  const [vistos, setVistos] = useState(getAnunciosVistos());
+  const anunciosVisibles = (anuncios || []).filter(a => a.activo && !vistos.includes(a.id));
+  const descartar = id => {
+    marcarAnuncioVisto(id);
+    setVistos(getAnunciosVistos());
+  };
+  return <div style={{
+    padding: "0 16px 20px"
+  }}>
+          {anunciosVisibles.length > 0 && <div style={{
+      marginBottom: 18
+    }}>
+              {anunciosVisibles.map(a => <div key={a.id} style={{
+        background: `linear-gradient(135deg, ${C.navy}, ${C.navyMid})`,
+        borderRadius: 14,
+        padding: "14px 16px",
+        marginBottom: 8,
+        position: "relative"
+      }}>
+                  <button onClick={() => descartar(a.id)} style={{
+          position: "absolute",
+          top: 10,
+          right: 10,
+          background: "rgba(255,255,255,0.12)",
+          border: "none",
+          borderRadius: "50%",
+          width: 24,
+          height: 24,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer"
+        }}>
+                    <X size={12} color="rgba(255,255,255,0.7)" />
+                  </button>
+                  <div style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 7,
+          marginBottom: 5,
+          paddingRight: 28
+        }}>
+                    <Megaphone size={14} color={C.gold} />
+                    <span style={{
+            fontSize: 14,
+            fontWeight: 700,
+            color: "white"
+          }}>{a.titulo}</span>
+                  </div>
+                  <div style={{
+          fontSize: 13,
+          color: "rgba(255,255,255,0.75)",
+          lineHeight: 1.5,
+          paddingRight: 20
+        }}>{a.mensaje}</div>
+                </div>)}
+            </div>}
+
+          <div style={{
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: 10,
+      marginBottom: 18
+    }}>
+            {tiposKeys.map((k, i) => <QuickAction key={k} tipo={k} onClick={() => onQuickAction(k)} full={i === tiposKeys.length - 1 && tiposKeys.length % 2 === 1} />)}
+          </div>
+
+          <button onClick={onWhatsapp} style={{
+      width: "100%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 10,
+      background: C.wa,
+      color: "white",
+      border: "none",
+      borderRadius: 14,
+      padding: "14px",
+      fontSize: 15.5,
+      fontWeight: 700,
+      cursor: "pointer",
+      marginBottom: 20,
+      boxShadow: "0 4px 16px rgba(37,211,102,0.3)"
+    }}>
+            <WAIcon /> Hablar con {KN.agente} por WhatsApp
+          </button>
+
+          {alertasActivas.length > 0 && <div style={{
+      marginBottom: 20
+    }}>
+              <div style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
+        marginBottom: 10
+      }}>
+                <Bell size={14} color={C.gold} />
+                <span style={{
+          fontSize: 12.5,
+          fontWeight: 700,
+          color: C.gray,
+          letterSpacing: "0.07em",
+          textTransform: "uppercase"
+        }}>Búsquedas activas</span>
+              </div>
+              {alertasActivas.slice(0, 2).map(a => <div key={a.id} style={{
+        background: C.goldBg,
+        borderRadius: 12,
+        padding: "12px 14px",
+        marginBottom: 8,
+        border: "1px solid #F0DFA8"
+      }}>
+                  <div style={{
+          fontSize: 14,
+          fontWeight: 700,
+          color: "#8B6A1A",
+          marginBottom: 3
+        }}>{a.titulo}</div>
+                  <div style={{
+          fontSize: 13,
+          color: C.amber,
+          lineHeight: 1.4
+        }}>{a.criterios}</div>
+                </div>)}
+            </div>}
+
+          <div style={{
+      fontSize: 12.5,
+      fontWeight: 700,
+      color: C.gray,
+      letterSpacing: "0.07em",
+      textTransform: "uppercase",
+      marginBottom: 10
+    }}>Tus últimos avisos</div>
+          {avisos.length === 0 && <EmptyState emoji="📋" text="Aún no has enviado avisos" sub="Usa los botones de arriba para informar" />}
+          {avisos.slice(0, 3).map(a => <div key={a.id} style={{
+      background: C.white,
+      borderRadius: 11,
+      padding: "12px 14px",
+      marginBottom: 7,
+      border: `1px solid ${C.border}`
+    }}>
+              <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        marginBottom: 4
+      }}>
+                <TipoTag tipo={a.tipo} />
+                <Badge estado={a.estado} />
+              </div>
+              <div style={{
+        fontSize: 14,
+        color: C.navy,
+        fontWeight: 600
+      }}>{a.dir || a.notas?.slice(0, 40) || "Sin descripción"}</div>
+              <div style={{
+        fontSize: 12,
+        color: C.gray,
+        marginTop: 2
+      }}>{a.fecha}</div>
+            </div>)}
+        </div>;
+}
+function C_Alertas({
+  alertas,
+  onWhatsappAlerta
+}) {
+  const activas = alertas.filter(a => a.activa);
+  return <div style={{
+    padding: "0 16px 20px"
+  }}>
+          <div style={{
+      fontSize: 13.5,
+      color: C.gray,
+      marginBottom: 16,
+      lineHeight: 1.5
+    }}>Búsquedas de clientes de {KN.agente}. Si conoces algo que encaje, avisa directamente.</div>
+          {activas.length === 0 && <EmptyState emoji="🔔" text="No hay búsquedas activas" sub="Te avisaremos cuando haya una nueva" />}
+          {activas.map(a => <div key={a.id} style={{
+      background: C.white,
+      borderRadius: 14,
+      padding: "16px",
+      marginBottom: 10,
+      border: `1px solid ${C.border}`
+    }}>
+              <div style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 8,
+        marginBottom: 8
+      }}>
+                <div style={{
+          width: 30,
+          height: 30,
+          borderRadius: 9,
+          background: C.goldBg,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0
+        }}><Megaphone size={16} color={C.gold} /></div>
+                <span style={{
+          fontSize: 15.5,
+          fontWeight: 700,
+          color: C.navy
+        }}>{a.titulo}</span>
+              </div>
+              <div style={{
+        fontSize: 14,
+        color: C.gray,
+        lineHeight: 1.5,
+        marginBottom: 12
+      }}>{a.criterios}</div>
+              <button onClick={() => onWhatsappAlerta(a)} style={{
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 7,
+        background: C.wa,
+        color: "white",
+        border: "none",
+        borderRadius: 10,
+        padding: "10px",
+        fontSize: 14,
+        fontWeight: 700,
+        cursor: "pointer"
+      }}>
+                <WAIcon size={15} /> Tengo algo que encaja
+              </button>
+            </div>)}
+        </div>;
+}
+function C_Avisos({
+  avisos
+}) {
+  const [filter, setFilter] = useState("todos");
+  const filtered = avisos.filter(a => filter === "todos" ? true : a.tipo === filter);
+  return <div style={{
+    padding: "0 16px 20px"
+  }}>
+          <div style={{
+      display: "flex",
+      gap: 6,
+      marginBottom: 14,
+      flexWrap: "wrap"
+    }}>
+            <button onClick={() => setFilter("todos")} style={{
+        padding: "5px 12px",
+        borderRadius: 99,
+        border: filter === "todos" ? "none" : `1px solid ${C.border}`,
+        cursor: "pointer",
+        fontSize: 12.5,
+        fontWeight: 600,
+        background: filter === "todos" ? C.navy : C.white,
+        color: filter === "todos" ? "white" : C.gray
+      }}>Todos</button>
+            {Object.keys(TIPOS).map(k => <button key={k} onClick={() => setFilter(k)} style={{
+        padding: "5px 12px",
+        borderRadius: 99,
+        border: filter === k ? "none" : `1px solid ${C.border}`,
+        cursor: "pointer",
+        fontSize: 12.5,
+        fontWeight: 600,
+        background: filter === k ? C.navy : C.white,
+        color: filter === k ? "white" : C.gray
+      }}>{TIPOS[k].emoji}</button>)}
+          </div>
+          {filtered.length === 0 && <EmptyState emoji="📋" text="Sin avisos en esta categoría" />}
+          {filtered.map(a => <div key={a.id} style={{
+      background: C.white,
+      borderRadius: 12,
+      padding: "13px 14px",
+      marginBottom: 8,
+      border: `1px solid ${C.border}`
+    }}>
+              <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        marginBottom: 6
+      }}>
+                <TipoTag tipo={a.tipo} />
+                <Badge estado={a.estado} />
+              </div>
+              {a.dir && <div style={{
+        fontSize: 14.5,
+        fontWeight: 600,
+        color: C.navy,
+        marginBottom: 2
+      }}>{a.dir}</div>}
+              {a.notas && <div style={{
+        fontSize: 13.5,
+        color: C.gray,
+        lineHeight: 1.4
+      }}>{a.notas}</div>}
+              <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: 6
+      }}>
+                <span style={{
+          fontSize: 12,
+          color: C.gray
+        }}>{a.fecha}</span>
+                <div style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8
+        }}>
+                  <div style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 3,
+            opacity: a.validado ? 1 : 0.45
+          }}>
+                    <Star size={12} color={C.gold} filled={a.validado} />
+                    <span style={{
+              fontSize: 12.5,
+              fontWeight: 700,
+              color: C.gold
+            }}>{TIPOS[a.tipo].estrellas}</span>
+                    {!a.validado && <span style={{
+              fontSize: 11,
+              color: C.gray
+            }}>(pendiente)</span>}
+                  </div>
+                  {a.importe ? <span style={{
+            fontSize: 14.5,
+            fontWeight: 700,
+            color: C.gold
+          }}>+{a.importe}€</span> : null}
+                </div>
+              </div>
+            </div>)}
+        </div>;
+}
+function BorrarDatosModal({
+  onClose,
+  onConfirm
+}) {
+  return <Modal onClose={onClose}>
+          <ModalHeader title="Solicitar borrado de mis datos" onClose={onClose} />
+          <div style={{
+      fontSize: 14,
+      color: C.navy,
+      lineHeight: 1.6,
+      marginBottom: 14
+    }}>
+            Se enviará un aviso a {KN.agente} solicitando la eliminación de tus datos personales (nombre, sector, zona, teléfono) de Spitia+.
+          </div>
+          <div style={{
+      background: C.cream,
+      borderRadius: 10,
+      padding: "12px 14px",
+      fontSize: 13,
+      color: C.gray,
+      lineHeight: 1.55,
+      marginBottom: 20,
+      border: `1px solid ${C.border}`
+    }}>
+            Tu solicitud se revisará y tus datos se eliminarán o anonimizarán en el plazo que exige la ley — salvo los registros que deban conservarse por obligaciones fiscales (por ejemplo, comisiones ya cobradas). Se cerrará tu sesión al confirmar.
+          </div>
+          <button onClick={onConfirm} style={{
+      width: "100%",
+      background: C.red,
+      color: "white",
+      border: "none",
+      borderRadius: 12,
+      padding: "14px",
+      fontSize: 15.5,
+      fontWeight: 700,
+      cursor: "pointer",
+      marginBottom: 10
+    }}>
+            Confirmar solicitud de borrado
+          </button>
+          <button onClick={onClose} style={{
+      width: "100%",
+      background: "none",
+      border: "none",
+      color: C.gray,
+      fontSize: 14,
+      fontWeight: 600,
+      cursor: "pointer",
+      padding: "8px"
+    }}>Cancelar</button>
+        </Modal>;
+}
+function C_Perfil({
+  conserje,
+  avisos,
+  onLogout,
+  onWhatsapp,
+  onConfirmarBaja
+}) {
+  const ini = initials(conserje.nombre);
+  const estrellas = totalEstrellas(avisos, conserje.id);
+  const pendientes = estrellasPendientes(avisos, conserje.id);
+  const [showBaja, setShowBaja] = useState(false);
+  const [showPolitica, setShowPolitica] = useState(false);
+  const [pushActivo, setPushActivo] = useState(Push.yaActivado() && !!conserje.fcmToken);
+  const [pushCargando, setPushCargando] = useState(false);
+  const activarPush = async () => {
+    setPushCargando(true);
+    const ok = await Push.activar(conserje.id);
+    setPushActivo(ok);
+    setPushCargando(false);
+    if (!ok) alert("No se pudieron activar las notificaciones. Comprueba que le has dado permiso al navegador.");
+  };
+  return <div style={{
+    padding: "0 16px 20px"
+  }}>
+          <div style={{
+      background: `linear-gradient(135deg, ${C.navy}, ${C.navyMid})`,
+      borderRadius: 18,
+      padding: "24px",
+      marginBottom: 14,
+      color: "white",
+      textAlign: "center"
+    }}>
+            <div style={{
+        width: 60,
+        height: 60,
+        borderRadius: "50%",
+        background: C.gold,
+        margin: "0 auto 12px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: 22.5,
+        fontWeight: 800
+      }}>{ini}</div>
+            <div style={{
+        fontSize: 20,
+        fontWeight: 700
+      }}>{conserje.nombre}</div>
+            <div style={{
+        fontSize: 13.5,
+        opacity: 0.65,
+        marginTop: 3
+      }}>{[conserje.sector, conserje.edificio].filter(Boolean).join(" · ")}</div>
+            <div style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 5,
+        marginTop: 10
+      }}>
+              <Star size={16} color={C.gold} />
+              <span style={{
+          fontSize: 16.5,
+          fontWeight: 800,
+          color: C.gold
+        }}>{estrellas}</span>
+              <span style={{
+          fontSize: 12.5,
+          opacity: 0.6
+        }}>estrellas validadas</span>
+            </div>
+            {pendientes > 0 && <div style={{
+        fontSize: 12,
+        opacity: 0.5,
+        marginTop: 3
+      }}>+{pendientes} ⭐ pendientes de validar</div>}
+            <div style={{
+        marginTop: 14,
+        background: "rgba(196,154,60,0.18)",
+        border: "1px solid rgba(196,154,60,0.3)",
+        borderRadius: 10,
+        padding: "10px 18px",
+        display: "inline-block"
+      }}>
+              <div style={{
+          fontSize: 11,
+          opacity: 0.7,
+          letterSpacing: "0.12em",
+          textTransform: "uppercase"
+        }}>Código colaborador</div>
+              <div style={{
+          fontSize: 21,
+          fontWeight: 900,
+          color: C.gold,
+          letterSpacing: "0.05em",
+          marginTop: 2
+        }}>{conserje.id}</div>
+            </div>
+          </div>
+
+          <div style={{
+      background: C.white,
+      borderRadius: 14,
+      padding: "18px",
+      marginBottom: 12,
+      border: `1px solid ${C.border}`
+    }}>
+            <div style={{
+        fontSize: 13.5,
+        fontWeight: 700,
+        color: C.navy,
+        marginBottom: 14
+      }}>Contacto directo</div>
+            {[[Phone, "Teléfono", KN.telefono]].map(([Icon, label, val], i) => <div key={label} style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 12
+      }}>
+                <div style={{
+          width: 32,
+          height: 32,
+          borderRadius: 8,
+          background: C.blueBg,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0
+        }}><Icon size={16} color={C.blue} /></div>
+                <div><div style={{
+            fontSize: 11.5,
+            color: C.gray
+          }}>{label}</div><div style={{
+            fontSize: 14.5,
+            fontWeight: 600,
+            color: C.navy
+          }}>{val}</div></div>
+              </div>)}
+          </div>
+
+          {PUSH_READY && <div style={{
+      background: pushActivo ? C.greenBg : C.white,
+      borderRadius: 14,
+      padding: "16px 18px",
+      marginBottom: 12,
+      border: `1px solid ${pushActivo ? "#B8E0C8" : C.border}`,
+      display: "flex",
+      alignItems: "center",
+      gap: 12
+    }}>
+            <div style={{
+        width: 36,
+        height: 36,
+        borderRadius: 10,
+        background: pushActivo ? "#C8ECD5" : C.goldBg,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexShrink: 0
+      }}><Bell size={17} color={pushActivo ? C.green : C.gold} /></div>
+            <div style={{
+        flex: 1
+      }}>
+              <div style={{
+          fontSize: 13.5,
+          fontWeight: 700,
+          color: C.navy
+        }}>{pushActivo ? "Notificaciones activadas" : "Recibir avisos aunque tengas la app cerrada"}</div>
+              {!pushActivo && <div style={{
+          fontSize: 12,
+          color: C.gray,
+          marginTop: 2
+        }}>Te avisamos en el móvil cuando haya algo nuevo</div>}
+            </div>
+            {!pushActivo && <button onClick={activarPush} disabled={pushCargando} style={{
+        background: C.gold,
+        color: "white",
+        border: "none",
+        borderRadius: 9,
+        padding: "8px 14px",
+        fontSize: 12.5,
+        fontWeight: 700,
+        cursor: "pointer",
+        whiteSpace: "nowrap"
+      }}>{pushCargando ? "..." : "Activar"}</button>}
+          </div>}
+
+          <button onClick={onWhatsapp} style={{
+      width: "100%",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      background: C.wa,
+      color: "white",
+      border: "none",
+      borderRadius: 12,
+      padding: "13px",
+      fontSize: 15,
+      fontWeight: 700,
+      cursor: "pointer",
+      marginBottom: 12
+    }}>
+            <WAIcon size={16} /> Escribir por WhatsApp
+          </button>
+
+          <button onClick={onLogout} style={{
+      width: "100%",
+      background: C.redBg,
+      color: C.red,
+      border: `1px solid ${C.red}30`,
+      borderRadius: 12,
+      padding: "12px",
+      fontSize: 15.5,
+      fontWeight: 600,
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      marginBottom: 14
+    }}>
+            <LogOut size={16} /> Cerrar sesión
+          </button>
+
+          <div style={{
+      fontSize: 11,
+      color: C.gray,
+      textAlign: "center",
+      lineHeight: 1.5,
+      opacity: 0.8,
+      marginBottom: 8
+    }}>
+            🔒 Tus datos son solo para esta red — no se comparten con nadie fuera de Spitia+.
+          </div>
+          <button onClick={() => setShowPolitica(true)} style={{
+      display: "block",
+      margin: "0 auto 14px",
+      background: "none",
+      border: "none",
+      color: C.blue,
+      fontSize: 12,
+      fontWeight: 600,
+      cursor: "pointer",
+      textDecoration: "underline"
+    }}>
+            Ver política de privacidad completa
+          </button>
+
+          <button onClick={() => setShowBaja(true)} style={{
+      width: "100%",
+      background: "none",
+      border: "none",
+      color: C.red,
+      opacity: 0.75,
+      fontSize: 12.5,
+      fontWeight: 600,
+      cursor: "pointer",
+      padding: "6px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 6
+    }}>
+            <Trash2 size={13} color={C.red} /> Solicitar borrado de mis datos
+          </button>
+
+          {showBaja && <BorrarDatosModal onClose={() => setShowBaja(false)} onConfirm={onConfirmarBaja} />}
+          {showPolitica && <PoliticaPrivacidadModal onClose={() => setShowPolitica(false)} />}
+        </div>;
+}
+function AvisoModal({
+  tipo,
+  onClose,
+  onConfirm
+}) {
+  const t = TIPOS[tipo];
+  const needsDir = tipo === "venta" || tipo === "alquiler" || tipo === "propietario" || tipo === "vacio";
+  const [dir, setDir] = useState("");
+  const [notas, setNotas] = useState("");
+  const valid = needsDir ? dir.trim() : dir.trim() || notas.trim();
+  const dirLabel = tipo === "nota" ? "Dirección (opcional)" : tipo === "colaborador" ? "Edificio donde trabaja (opcional)" : "Dirección del inmueble";
+  const dirPlaceholder = tipo === "colaborador" ? "Ej: Serrano 10" : "Ej: Velázquez 34, 3ºB";
+  const notasLabel = tipo === "nota" ? "¿Qué quieres contarnos?" : tipo === "colaborador" ? "Notas para ti (opcional)" : "Notas (opcional)";
+  const notasPlaceholder = tipo === "nota" ? "Cualquier información relevante..." : tipo === "colaborador" ? "Sin datos personales de la persona, gracias" : tipo === "vacio" ? "Ej: Vacío desde hace meses, obras en curso..." : "Contexto sobre la situación...";
+  return <Modal onClose={onClose}>
+          <ModalHeader title={t.label} onClose={onClose} />
+
+          {tipo === "propietario" && <div style={{
+      background: C.goldBg,
+      borderRadius: 10,
+      padding: "10px 12px",
+      fontSize: 14,
+      color: "#8B6A1A",
+      lineHeight: 1.5,
+      marginBottom: 16
+    }}>
+              Al registrar este aviso te mostraremos un mensaje listo para compartir con el propietario — con los datos de {KN.agente}, nunca al revés.
+            </div>}
+          {tipo === "colaborador" && <div style={{
+      background: C.tealBg,
+      borderRadius: 10,
+      padding: "10px 12px",
+      fontSize: 14,
+      color: C.teal,
+      lineHeight: 1.5,
+      marginBottom: 16
+    }}>
+              No necesitamos ningún dato de esa persona. Al registrar el aviso te daremos un mensaje con el teléfono de {KN.agente} para que se lo pases tú mismo — así nadie comparte datos de nadie.
+            </div>}
+
+          <label style={{
+      fontSize: 13.5,
+      fontWeight: 600,
+      color: C.gray,
+      display: "block",
+      marginBottom: 6
+    }}>{dirLabel}</label>
+          <input value={dir} onChange={e => setDir(e.target.value)} placeholder={dirPlaceholder} style={{
+      width: "100%",
+      padding: "12px 13px",
+      borderRadius: 10,
+      border: `1.5px solid ${C.border}`,
+      fontSize: 15.5,
+      color: C.navy,
+      outline: "none",
+      background: C.cream,
+      boxSizing: "border-box",
+      marginBottom: 14
+    }} />
+
+          <label style={{
+      fontSize: 13.5,
+      fontWeight: 600,
+      color: C.gray,
+      display: "block",
+      marginBottom: 6
+    }}>{notasLabel}</label>
+          <textarea value={notas} onChange={e => setNotas(e.target.value)} placeholder={notasPlaceholder} style={{
+      width: "100%",
+      padding: "11px 13px",
+      borderRadius: 10,
+      border: `1.5px solid ${C.border}`,
+      fontSize: 15.5,
+      color: C.navy,
+      outline: "none",
+      background: C.cream,
+      boxSizing: "border-box",
+      height: 80,
+      marginBottom: 18,
+      fontFamily: "inherit"
+    }} />
+
+          <button onClick={() => valid && onConfirm(dir.trim(), notas.trim())} style={{
+      width: "100%",
+      background: valid ? C.navy : "#D8DAE5",
+      color: "white",
+      border: "none",
+      borderRadius: 12,
+      padding: "15px",
+      fontSize: 17,
+      fontWeight: 700,
+      cursor: valid ? "pointer" : "default"
+    }}>
+            Registrar aviso
+          </button>
+        </Modal>;
+}
+function CompartirContactoModal({
+  conserje,
+  dir,
+  tipo,
+  onClose
+}) {
+  const esColaborador = tipo === "colaborador";
+  const msg = esColaborador ? `Hola, soy ${conserje.nombre}, colaborador de Spitia+ con ${KN.agente}.\n\nCreo que te puede interesar unirte a la red — escríbele directamente, sin compromiso:\n\n📞 ${KN.telefono}\n\nDile que te avisó ${conserje.nombre} (${conserje.id})` : `Buenas, le contacto de parte de ${conserje.nombre}${dir ? ` (${dir})` : ""}.\n\nSi en algún momento piensa en vender o alquilar su vivienda, ${KN.agente} puede asesorarle sin ningún compromiso:\n\n📞 ${KN.telefono}\n\nRef. colaborador: ${conserje.id}`;
+  const titulo = esColaborador ? "Comparte esto con la persona" : "Comparte esto con el propietario";
+  const subtitulo = esColaborador ? "Tu aviso ya está registrado. Pásale este mensaje directamente — no hace falta darnos sus datos." : "Tu aviso ya está registrado. Ahora comparte este mensaje directamente con el propietario.";
+  return <Modal onClose={onClose}>
+          <ModalHeader title={titulo} onClose={onClose} />
+          <div style={{
+      fontSize: 13.5,
+      color: C.gray,
+      marginBottom: 14
+    }}>{subtitulo}</div>
+          <div style={{
+      background: C.cream,
+      borderRadius: 10,
+      padding: "12px 14px",
+      fontSize: 13.5,
+      color: C.navy,
+      lineHeight: 1.65,
+      marginBottom: 16,
+      whiteSpace: "pre-wrap",
+      border: `1px solid ${C.border}`
+    }}>{msg}</div>
+          <button onClick={() => {
+      window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank");
+      onClose();
+    }} style={{
+      width: "100%",
+      background: C.wa,
+      color: "white",
+      border: "none",
+      borderRadius: 12,
+      padding: "14px",
+      fontSize: 16.5,
+      fontWeight: 700,
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      marginBottom: 10
+    }}>
+            <WAIcon /> Enviar por WhatsApp
+          </button>
+          <button onClick={onClose} style={{
+      width: "100%",
+      background: "none",
+      border: "none",
+      color: C.gray,
+      fontSize: 14.5,
+      fontWeight: 600,
+      cursor: "pointer",
+      padding: "8px"
+    }}>Ahora no</button>
+        </Modal>;
+}
+function DifundirWhatsAppModal({
+  mensaje,
+  onClose
+}) {
+  return <Modal onClose={onClose}>
+          <ModalHeader title="Difundir por WhatsApp" onClose={onClose} />
+          <div style={{
+      fontSize: 13.5,
+      color: C.gray,
+      marginBottom: 14
+    }}>Ya está publicado en la app. Esto lo pone además delante de tu gente ahora mismo — elige el grupo o los contactos a quienes enviárselo.</div>
+          <div style={{
+      background: C.cream,
+      borderRadius: 10,
+      padding: "12px 14px",
+      fontSize: 13.5,
+      color: C.navy,
+      lineHeight: 1.65,
+      marginBottom: 16,
+      whiteSpace: "pre-wrap",
+      border: `1px solid ${C.border}`
+    }}>{mensaje}</div>
+          <button onClick={() => {
+      window.open(`https://wa.me/?text=${encodeURIComponent(mensaje)}`, "_blank");
+      onClose();
+    }} style={{
+      width: "100%",
+      background: C.wa,
+      color: "white",
+      border: "none",
+      borderRadius: 12,
+      padding: "14px",
+      fontSize: 16.5,
+      fontWeight: 700,
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      marginBottom: 10
+    }}>
+            <WAIcon /> Abrir WhatsApp
+          </button>
+          <button onClick={onClose} style={{
+      width: "100%",
+      background: "none",
+      border: "none",
+      color: C.gray,
+      fontSize: 14.5,
+      fontWeight: 600,
+      cursor: "pointer",
+      padding: "8px"
+    }}>Ahora no</button>
+        </Modal>;
+}
+const C_TABS = [{
+  id: "home",
+  label: "Inicio",
+  Icon: Home
+}, {
+  id: "alertas",
+  label: "Alertas",
+  Icon: Bell
+}, {
+  id: "avisos",
+  label: "Mis avisos",
+  Icon: ClipList
+}, {
+  id: "perfil",
+  label: "Perfil",
+  Icon: User
+}];
+function ConserjeApp({
+  conserje,
+  avisos,
+  alertas,
+  anuncios,
+  onAddAviso,
+  onLogout,
+  onSolicitarBaja,
+  justRegistered,
+  onDismissWelcome
+}) {
+  const [tab, setTab] = useState("home");
+  const [modalTipo, setModalTipo] = useState(null);
+  const [shareData, setShareData] = useState(null);
+  const [toast, setToast] = useState(null);
+  const fire = m => {
+    setToast(m);
+    setTimeout(() => setToast(null), 2800);
+  };
+  const waEduardo = extra => {
+    const msg = `Hola ${KN.agente}, soy ${conserje.nombre} (${conserje.id})${extra ? ". " + extra : ", quería comentarte algo."}`;
+    window.open(`https://wa.me/${KN.whatsapp}?text=${encodeURIComponent(msg)}`, "_blank");
+  };
+  const confirmarBaja = () => {
+    waEduardo(`Solicito el borrado de mis datos personales de Spitia+ (código ${conserje.id}), conforme a mi derecho de supresión.`);
+    onSolicitarBaja();
+  };
+  const confirmAviso = (dir, notas) => {
+    onAddAviso(modalTipo, dir, notas);
+    const wasShareFlow = modalTipo === "propietario" || modalTipo === "colaborador";
+    const puntos = TIPOS[modalTipo].estrellas;
+    const tipoConfirmado = modalTipo;
+    setModalTipo(null);
+    if (wasShareFlow) {
+      setShareData({
+        dir,
+        puntos,
+        tipo: tipoConfirmado
+      });
+    } else {
+      fire(`Aviso registrado — +${puntos} ⭐ pendientes`);
+    }
+  };
+  const headerMap = {
+    home: ["Spitia+", `Hola, ${conserje.nombre.split(" ")[0]}`],
+    alertas: ["Alertas", "Búsquedas activas"],
+    avisos: ["Mis avisos", `${avisos.length} registrados`],
+    perfil: ["Mi perfil", conserje.id]
+  };
+  const [hl, ht] = headerMap[tab];
+  const alertasActivas = alertas.filter(a => a.activa).length;
+  return <AppShell header={<div style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-end"
+  }}>
+              <div>
+                <div style={{
+        fontSize: 11.5,
+        color: "rgba(255,255,255,0.5)",
+        letterSpacing: "0.1em",
+        textTransform: "uppercase",
+        marginBottom: 2
+      }}>{hl}</div>
+                <div style={{
+        fontSize: 19,
+        fontWeight: 700,
+        color: "white"
+      }}>{ht}</div>
+              </div>
+              <div style={{
+      background: "rgba(196,154,60,0.2)",
+      borderRadius: 8,
+      padding: "4px 10px",
+      display: "flex",
+      alignItems: "center",
+      gap: 4
+    }}>
+                <Star size={12} color={C.gold} />
+                <span style={{
+        fontSize: 12.5,
+        color: C.gold,
+        fontWeight: 800
+      }}>{totalEstrellas(avisos, conserje.id)}</span>
+              </div>
+            </div>} nav={C_TABS.map(t => <NavBtn key={t.id} active={tab === t.id} label={t.label} Icon={t.Icon} badge={t.id === "alertas" ? alertasActivas : 0} onClick={() => setTab(t.id)} />)}>
+          {tab === "home" && <C_Home conserje={conserje} avisos={avisos} alertas={alertas} anuncios={anuncios} onQuickAction={setModalTipo} onWhatsapp={() => waEduardo()} />}
+          {tab === "alertas" && <C_Alertas alertas={alertas} onWhatsappAlerta={a => waEduardo(`Te escribo por la búsqueda "${a.titulo}" — creo que tengo algo.`)} />}
+          {tab === "avisos" && <C_Avisos avisos={avisos} />}
+          {tab === "perfil" && <C_Perfil conserje={conserje} avisos={avisos} onLogout={onLogout} onWhatsapp={() => waEduardo()} onConfirmarBaja={confirmarBaja} />}
+
+          {toast && <Toast msg={toast} />}
+          {modalTipo && <AvisoModal tipo={modalTipo} onClose={() => setModalTipo(null)} onConfirm={confirmAviso} />}
+          {shareData && <CompartirContactoModal conserje={conserje} dir={shareData.dir} tipo={shareData.tipo} onClose={() => {
+      const p = shareData.puntos;
+      setShareData(null);
+      fire(`Aviso registrado — +${p} ⭐ pendientes`);
+    }} />}
+          {justRegistered && <BienvenidaModal code={justRegistered.code} pin={justRegistered.pin} nombre={justRegistered.nombre} onClose={onDismissWelcome} />}
+        </AppShell>;
+}
+function A_Conserjes({
+  data,
+  runAction,
+  fire
+}) {
+  const toggle = async id => {
+    const c = data.conserjes.find(x => x.id === id);
+    await runAction(d => Actions.patchConserje(d, id, {
+      activo: !c.activo
+    }));
+    fire("Estado actualizado");
+  };
+  const anonimizar = async id => {
+    await runAction(d => Actions.patchConserje(d, id, {
+      nombre: "Excolaborador (datos borrados)",
+      sector: "",
+      edificio: "",
+      telefono: "",
+      activo: false,
+      bajaSolicitada: false,
+      datosBorrados: true,
+      fechaBorrado: fdate()
+    }));
+    fire("Datos personales eliminados");
+  };
+  const sorted = [...data.conserjes].sort((a, b) => (b.fechaAlta || "").localeCompare(a.fechaAlta || ""));
+  const pendientesBaja = data.conserjes.filter(c => c.bajaSolicitada).length;
+  return <div style={{
+    padding: "0 16px 20px"
+  }}>
+          <div style={{
+      fontSize: 12.5,
+      fontWeight: 700,
+      color: C.gray,
+      letterSpacing: "0.07em",
+      textTransform: "uppercase",
+      marginBottom: 12
+    }}>{data.conserjes.length} colaboradores dados de alta{pendientesBaja > 0 ? ` · ${pendientesBaja} con borrado pendiente` : ""}</div>
+
+          {sorted.length === 0 && <EmptyState emoji="👥" text="Aún no se ha dado de alta ningún conserje" sub="Comparte el enlace de la app para que se registren" />}
+
+          {sorted.map(c => {
+      const misAvisos = data.avisos.filter(av => av.conserjeId === c.id);
+      const cobrado = misAvisos.filter(av => av.estado === "cerrada").reduce((s, av) => s + (av.importe || 0), 0);
+      return <div key={c.id} style={{
+        background: C.white,
+        borderRadius: 13,
+        padding: "14px",
+        marginBottom: 9,
+        border: `1px solid ${c.bajaSolicitada ? C.red : C.border}`
+      }}>
+                <div style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 12
+        }}>
+                  <div style={{
+            width: 42,
+            height: 42,
+            borderRadius: "50%",
+            background: c.activo ? C.navy : "#D8DAE5",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 15.5,
+            fontWeight: 700,
+            color: "white",
+            flexShrink: 0
+          }}>{initials(c.nombre)}</div>
+                  <div style={{
+            flex: 1,
+            minWidth: 0
+          }}>
+                    <div style={{
+              fontSize: 14.5,
+              fontWeight: 700,
+              color: c.activo ? C.navy : C.gray
+            }}>{c.nombre}</div>
+                    <div style={{
+              fontSize: 12.5,
+              color: C.gray,
+              marginTop: 1
+            }}>{[c.id, c.sector, c.edificio, c.telefono].filter(Boolean).join(" · ")}</div>
+                    <div style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 5,
+              marginTop: 3
+            }}>
+                      <Star size={12} color={C.gold} />
+                      <span style={{
+                fontSize: 12.5,
+                fontWeight: 800,
+                color: C.gold
+              }}>{totalEstrellas(data.avisos, c.id)}</span>
+                      <span style={{
+                fontSize: 11.5,
+                color: C.gray
+              }}>· {misAvisos.length} aviso{misAvisos.length !== 1 ? "s" : ""} · {cobrado}€</span>
+                    </div>
+                  </div>
+                  {!c.datosBorrados && <button onClick={() => toggle(c.id)} style={{
+            background: c.activo ? C.redBg : C.greenBg,
+            color: c.activo ? C.red : C.green,
+            border: "none",
+            borderRadius: 8,
+            padding: "5px 10px",
+            fontSize: 12.5,
+            fontWeight: 700,
+            cursor: "pointer",
+            whiteSpace: "nowrap"
+          }}>
+                      {c.activo ? "Pausar" : "Activar"}
+                    </button>}
+                </div>
+                {c.bajaSolicitada && <div style={{
+          marginTop: 12,
+          paddingTop: 12,
+          borderTop: `1px solid ${C.redBg}`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 10
+        }}>
+                    <div style={{
+            fontSize: 12,
+            color: C.red,
+            fontWeight: 600,
+            display: "flex",
+            alignItems: "center",
+            gap: 6
+          }}>
+                      <Trash2 size={13} color={C.red} /> Ha solicitado el borrado de sus datos{c.fechaBaja ? ` · ${c.fechaBaja}` : ""}
+                    </div>
+                    <button onClick={() => anonimizar(c.id)} style={{
+            background: C.red,
+            color: "white",
+            border: "none",
+            borderRadius: 8,
+            padding: "6px 12px",
+            fontSize: 12,
+            fontWeight: 700,
+            cursor: "pointer",
+            whiteSpace: "nowrap"
+          }}>
+                      Completar borrado
+                    </button>
+                  </div>}
+              </div>;
+    })}
+        </div>;
+}
+function A_Avisos({
+  data,
+  runAction,
+  fire
+}) {
+  const [filter, setFilter] = useState("todos");
+  const [soloSinValidar, setSoloSinValidar] = useState(false);
+  const [editAviso, setEditAviso] = useState(null);
+  const [newEstado, setNewEstado] = useState("pendiente");
+  const [newImporte, setNewImporte] = useState("");
+  const getNombre = id => data.conserjes.find(c => c.id === id)?.nombre?.split(" ")[0] || id;
+  const sorted = [...data.avisos].sort((a, b) => String(b.id).localeCompare(String(a.id)));
+  const filtered = sorted.filter(a => (filter === "todos" ? true : a.tipo === filter) && (!soloSinValidar || !a.validado));
+  const pendientesTotal = data.avisos.filter(a => !a.validado).length;
+  const openEdit = a => {
+    setEditAviso(a);
+    setNewEstado(a.estado);
+    setNewImporte(a.importe ? String(a.importe) : "");
+  };
+  const saveEdit = async () => {
+    const canHaveImporte = !["nota", "colaborador", "vacio"].includes(editAviso.tipo);
+    const imp = newEstado === "cerrada" && canHaveImporte && newImporte ? parseFloat(newImporte) : null;
+    await runAction(d => Actions.patchItem(d, "avisos", editAviso.id, {
+      estado: newEstado,
+      importe: imp
+    }));
+    setEditAviso(null);
+    fire("Aviso actualizado");
+  };
+  const toggleValidado = async a => {
+    await runAction(d => Actions.patchItem(d, "avisos", a.id, {
+      validado: !a.validado
+    }));
+    fire(a.validado ? "Validación retirada" : `Validado — +${TIPOS[a.tipo].estrellas} ⭐ para ${getNombre(a.conserjeId)}`);
+  };
+  return <div style={{
+    padding: "0 16px 20px"
+  }}>
+          <div style={{
+      display: "flex",
+      gap: 6,
+      marginBottom: 10,
+      flexWrap: "wrap"
+    }}>
+            <button onClick={() => setFilter("todos")} style={{
+        padding: "5px 11px",
+        borderRadius: 99,
+        border: filter === "todos" ? "none" : `1px solid ${C.border}`,
+        cursor: "pointer",
+        fontSize: 12.5,
+        fontWeight: 600,
+        background: filter === "todos" ? C.navy : C.white,
+        color: filter === "todos" ? "white" : C.gray
+      }}>Todos</button>
+            {Object.keys(TIPOS).map(k => <button key={k} onClick={() => setFilter(k)} style={{
+        padding: "5px 11px",
+        borderRadius: 99,
+        border: filter === k ? "none" : `1px solid ${C.border}`,
+        cursor: "pointer",
+        fontSize: 12.5,
+        fontWeight: 600,
+        background: filter === k ? C.navy : C.white,
+        color: filter === k ? "white" : C.gray
+      }}>{TIPOS[k].emoji} {TIPOS[k].label}</button>)}
+          </div>
+          <button onClick={() => setSoloSinValidar(!soloSinValidar)} style={{
+      display: "flex",
+      alignItems: "center",
+      gap: 6,
+      padding: "6px 12px",
+      borderRadius: 9,
+      border: `1.5px solid ${soloSinValidar ? C.gold : C.border}`,
+      background: soloSinValidar ? C.goldBg : C.white,
+      color: soloSinValidar ? "#8B6A1A" : C.gray,
+      fontSize: 13.5,
+      fontWeight: 700,
+      cursor: "pointer",
+      marginBottom: 14
+    }}>
+            <Star size={13} color={soloSinValidar ? C.gold : C.gray} filled={false} />
+            Solo sin validar {pendientesTotal > 0 ? `(${pendientesTotal})` : ""}
+          </button>
+
+          {filtered.length === 0 && <EmptyState emoji="📋" text="Sin avisos en esta categoría" />}
+          {filtered.map(a => <div key={a.id} style={{
+      background: C.white,
+      borderRadius: 12,
+      padding: "13px 14px",
+      marginBottom: 8,
+      border: `1px solid ${a.validado ? C.border : "#F0DFA8"}`
+    }}>
+              <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        marginBottom: 6
+      }}>
+                <TipoTag tipo={a.tipo} />
+                <Badge estado={a.estado} />
+              </div>
+              {a.dir && <div style={{
+        fontSize: 14.5,
+        fontWeight: 600,
+        color: C.navy
+      }}>{a.dir}</div>}
+              {a.notas && <div style={{
+        fontSize: 13.5,
+        color: C.gray,
+        marginTop: 2,
+        lineHeight: 1.4
+      }}>{a.notas}</div>}
+              <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: 8
+      }}>
+                <span style={{
+          fontSize: 12.5,
+          color: C.gold,
+          fontWeight: 600
+        }}>{getNombre(a.conserjeId)} · {a.fecha}</span>
+                <div style={{
+          display: "flex",
+          gap: 6
+        }}>
+                  <button onClick={() => toggleValidado(a)} style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 4,
+            background: a.validado ? C.greenBg : C.goldBg,
+            color: a.validado ? C.green : "#8B6A1A",
+            border: "none",
+            borderRadius: 7,
+            padding: "4px 9px",
+            fontSize: 12.5,
+            fontWeight: 700,
+            cursor: "pointer"
+          }}>
+                    <Star size={11} color={a.validado ? C.green : "#8B6A1A"} filled={a.validado} />
+                    {a.validado ? `+${TIPOS[a.tipo].estrellas} validado` : `Validar +${TIPOS[a.tipo].estrellas}`}
+                  </button>
+                  <button onClick={() => openEdit(a)} style={{
+            background: C.blueBg,
+            color: C.blue,
+            border: "none",
+            borderRadius: 7,
+            padding: "4px 9px",
+            fontSize: 12.5,
+            fontWeight: 700,
+            cursor: "pointer"
+          }}>Gestionar</button>
+                </div>
+              </div>
+              {a.importe ? <div style={{
+        fontSize: 13.5,
+        color: C.green,
+        fontWeight: 700,
+        marginTop: 4
+      }}>Comisión: {a.importe}€</div> : null}
+            </div>)}
+
+          {editAviso && <Modal onClose={() => setEditAviso(null)}>
+              <ModalHeader title="Gestionar aviso" onClose={() => setEditAviso(null)} />
+              <div style={{
+        fontSize: 13.5,
+        color: C.gray,
+        marginBottom: 4
+      }}><TipoTag tipo={editAviso.tipo} /></div>
+              <div style={{
+        fontSize: 14.5,
+        color: C.navy,
+        fontWeight: 600,
+        marginTop: 8,
+        marginBottom: 2
+      }}>{editAviso.dir || "Sin dirección"}</div>
+              {editAviso.notas && <div style={{
+        fontSize: 13.5,
+        color: C.gray,
+        marginBottom: 10
+      }}>{editAviso.notas}</div>}
+              <button onClick={() => {
+        toggleValidado(editAviso);
+        setEditAviso({
+          ...editAviso,
+          validado: !editAviso.validado
+        });
+      }} style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
+        background: editAviso.validado ? C.greenBg : C.goldBg,
+        color: editAviso.validado ? C.green : "#8B6A1A",
+        border: "none",
+        borderRadius: 9,
+        padding: "8px 12px",
+        fontSize: 14,
+        fontWeight: 700,
+        cursor: "pointer",
+        marginBottom: 14
+      }}>
+                <Star size={14} color={editAviso.validado ? C.green : "#8B6A1A"} filled={editAviso.validado} />
+                {editAviso.validado ? `Estrellas validadas (+${TIPOS[editAviso.tipo].estrellas})` : `Validar estrellas (+${TIPOS[editAviso.tipo].estrellas})`}
+              </button>
+
+              <label style={{
+        fontSize: 12.5,
+        fontWeight: 600,
+        color: C.gray,
+        display: "block",
+        marginBottom: 8,
+        marginTop: 10
+      }}>Estado</label>
+              <div style={{
+        display: "flex",
+        gap: 6,
+        marginBottom: 16,
+        flexWrap: "wrap"
+      }}>
+                {[["pendiente", "Pendiente"], ["en_gestion", "En gestión"], ["cerrada", "Cerrada ✓"], ["leida", "Leída"]].map(([k, l]) => <button key={k} onClick={() => setNewEstado(k)} style={{
+          padding: "7px 12px",
+          borderRadius: 9,
+          border: `1.5px solid ${newEstado === k ? C.navy : C.border}`,
+          background: newEstado === k ? C.navy : C.white,
+          color: newEstado === k ? "white" : C.gray,
+          fontWeight: 600,
+          fontSize: 13.5,
+          cursor: "pointer"
+        }}>{l}</button>)}
+              </div>
+              {newEstado === "cerrada" && !["nota", "colaborador", "vacio"].includes(editAviso.tipo) && <>
+                  <label style={{
+          fontSize: 12.5,
+          fontWeight: 600,
+          color: C.gray,
+          display: "block",
+          marginBottom: 6
+        }}>Comisión para el colaborador (€)</label>
+                  <input type="number" value={newImporte} onChange={e => setNewImporte(e.target.value)} placeholder="Ej: 500" style={{
+          width: "100%",
+          padding: "11px 12px",
+          borderRadius: 10,
+          border: `1.5px solid ${C.border}`,
+          fontSize: 15.5,
+          color: C.navy,
+          outline: "none",
+          background: C.cream,
+          boxSizing: "border-box",
+          marginBottom: 16
+        }} />
+                </>}
+              <button onClick={saveEdit} style={{
+        width: "100%",
+        background: C.navy,
+        color: "white",
+        border: "none",
+        borderRadius: 12,
+        padding: "13px",
+        fontSize: 15.5,
+        fontWeight: 700,
+        cursor: "pointer"
+      }}>Guardar</button>
+            </Modal>}
+        </div>;
+}
+function A_Alertas({
+  data,
+  runAction,
+  fire
+}) {
+  const [showAdd, setShowAdd] = useState(false);
+  const [titulo, setTitulo] = useState("");
+  const [criterios, setCriterios] = useState("");
+  const [difundir, setDifundir] = useState(null);
+  const sorted = [...data.alertas].sort((a, b) => String(b.id).localeCompare(String(a.id)));
+  const mensajeDifusion = a => `🔔 Nueva búsqueda en Spitia+\n\n${a.titulo}\n${a.criterios}\n\nSi conoces algo que encaje, avísame.\n\n—\nEntra en ${APP_URL} para ver esta y otras alertas y avisos.`;
+  const handleAdd = async () => {
+    if (!titulo.trim() || !criterios.trim()) return;
+    const alerta = {
+      titulo: titulo.trim(),
+      criterios: criterios.trim(),
+      activa: true,
+      fecha: fdate()
+    };
+    await runAction(d => Actions.pushItem(d, "alertas", alerta));
+    setTitulo("");
+    setCriterios("");
+    setShowAdd(false);
+    fire("Alerta publicada a todos los colaboradores");
+    setDifundir(alerta);
+  };
+  const toggle = async id => {
+    const a = data.alertas.find(x => x.id === id);
+    await runAction(d => Actions.patchItem(d, "alertas", id, {
+      activa: !a.activa
+    }));
+    fire("Alerta actualizada");
+  };
+  return <div style={{
+    padding: "0 16px 20px"
+  }}>
+          <div style={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 14
+    }}>
+            <span style={{
+        fontSize: 12.5,
+        fontWeight: 700,
+        color: C.gray,
+        letterSpacing: "0.07em",
+        textTransform: "uppercase"
+      }}>{data.alertas.length} publicadas</span>
+            <button onClick={() => setShowAdd(!showAdd)} style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 4,
+        background: C.gold,
+        color: "white",
+        border: "none",
+        borderRadius: 8,
+        padding: "6px 12px",
+        fontSize: 13.5,
+        fontWeight: 700,
+        cursor: "pointer"
+      }}>
+              <Plus size={14} strokeWidth={2.5} /> Nueva
+            </button>
+          </div>
+
+          {showAdd && <div style={{
+      background: C.white,
+      borderRadius: 14,
+      padding: "16px",
+      marginBottom: 14,
+      border: `1px solid ${C.border}`
+    }}>
+              <div style={{
+        fontSize: 14.5,
+        fontWeight: 700,
+        color: C.navy,
+        marginBottom: 12
+      }}>Nueva búsqueda de cliente</div>
+              <label style={{
+        fontSize: 12.5,
+        fontWeight: 600,
+        color: C.gray,
+        display: "block",
+        marginBottom: 6
+      }}>Título breve</label>
+              <input value={titulo} onChange={e => setTitulo(e.target.value)} placeholder="Ej: Cliente busca en Chamberí" style={{
+        width: "100%",
+        padding: "10px 12px",
+        borderRadius: 9,
+        border: `1.5px solid ${C.border}`,
+        fontSize: 14.5,
+        color: C.navy,
+        outline: "none",
+        background: C.cream,
+        boxSizing: "border-box",
+        marginBottom: 10
+      }} />
+              <label style={{
+        fontSize: 12.5,
+        fontWeight: 600,
+        color: C.gray,
+        display: "block",
+        marginBottom: 6
+      }}>Criterios de búsqueda</label>
+              <textarea value={criterios} onChange={e => setCriterios(e.target.value)} placeholder="Ej: Piso a reformar, +140m², hasta 1,3M€, zona Chamberí" style={{
+        width: "100%",
+        padding: "10px 12px",
+        borderRadius: 9,
+        border: `1.5px solid ${C.border}`,
+        fontSize: 14.5,
+        color: C.navy,
+        outline: "none",
+        background: C.cream,
+        boxSizing: "border-box",
+        height: 70,
+        marginBottom: 12,
+        fontFamily: "inherit"
+      }} />
+              <div style={{
+        display: "flex",
+        gap: 8
+      }}>
+                <button onClick={() => setShowAdd(false)} style={{
+          flex: 1,
+          padding: "10px",
+          borderRadius: 9,
+          border: `1px solid ${C.border}`,
+          background: "white",
+          color: C.gray,
+          fontWeight: 600,
+          fontSize: 14.5,
+          cursor: "pointer"
+        }}>Cancelar</button>
+                <button onClick={handleAdd} style={{
+          flex: 1,
+          padding: "10px",
+          borderRadius: 9,
+          border: "none",
+          background: titulo.trim() && criterios.trim() ? C.navy : "#D8DAE5",
+          color: "white",
+          fontWeight: 700,
+          fontSize: 14.5,
+          cursor: titulo.trim() && criterios.trim() ? "pointer" : "default"
+        }}>Publicar</button>
+              </div>
+            </div>}
+
+          {sorted.length === 0 && !showAdd && <EmptyState emoji="🔔" text="Aún no has publicado ninguna alerta" sub="Los conserjes verán aquí lo que publiques" />}
+          {sorted.map(a => <div key={a.id} style={{
+      background: C.white,
+      borderRadius: 12,
+      padding: "14px",
+      marginBottom: 8,
+      border: `1px solid ${C.border}`,
+      opacity: a.activa ? 1 : 0.55
+    }}>
+              <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        marginBottom: 6
+      }}>
+                <span style={{
+          fontSize: 15,
+          fontWeight: 700,
+          color: C.navy
+        }}>{a.titulo}</span>
+                <button onClick={() => toggle(a.id)} style={{
+          background: a.activa ? C.redBg : C.greenBg,
+          color: a.activa ? C.red : C.green,
+          border: "none",
+          borderRadius: 7,
+          padding: "3px 8px",
+          fontSize: 12,
+          fontWeight: 700,
+          cursor: "pointer",
+          whiteSpace: "nowrap"
+        }}>
+                  {a.activa ? "Desactivar" : "Reactivar"}
+                </button>
+              </div>
+              <div style={{
+        fontSize: 13.5,
+        color: C.gray,
+        lineHeight: 1.45,
+        marginBottom: 4
+      }}>{a.criterios}</div>
+              <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center"
+      }}>
+                <div style={{
+          fontSize: 12,
+          color: C.gray
+        }}>{a.fecha}</div>
+                <button onClick={() => setDifundir(a)} style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 5,
+          background: C.wa,
+          color: "white",
+          border: "none",
+          borderRadius: 7,
+          padding: "4px 10px",
+          fontSize: 11.5,
+          fontWeight: 700,
+          cursor: "pointer"
+        }}>
+                  <WAIcon size={12} /> Difundir
+                </button>
+              </div>
+            </div>)}
+          {difundir && <DifundirWhatsAppModal mensaje={mensajeDifusion(difundir)} onClose={() => setDifundir(null)} />}
+        </div>;
+}
+function A_Anuncios({
+  data,
+  runAction,
+  fire
+}) {
+  const [showAdd, setShowAdd] = useState(false);
+  const [titulo, setTitulo] = useState("");
+  const [mensaje, setMensaje] = useState("");
+  const [difundir, setDifundir] = useState(null);
+  const sorted = [...(data.anuncios || [])].sort((a, b) => String(b.id).localeCompare(String(a.id)));
+  const mensajeDifusion = a => `📢 Aviso de ${KN.agente} — Spitia+\n\n${a.titulo}\n${a.mensaje}\n\n—\nEntra en ${APP_URL} para ver este y otros avisos y alertas.`;
+  const handleAdd = async () => {
+    if (!titulo.trim() || !mensaje.trim()) return;
+    const anuncio = {
+      titulo: titulo.trim(),
+      mensaje: mensaje.trim(),
+      activo: true,
+      fecha: fdate()
+    };
+    await runAction(d => Actions.pushItem(d, "anuncios", anuncio));
+    setTitulo("");
+    setMensaje("");
+    setShowAdd(false);
+    fire("Anuncio publicado a todos los colaboradores");
+    setDifundir(anuncio);
+  };
+  const toggle = async id => {
+    const a = (data.anuncios || []).find(x => x.id === id);
+    await runAction(d => Actions.patchItem(d, "anuncios", id, {
+      activo: !a.activo
+    }));
+    fire("Anuncio actualizado");
+  };
+  return <div style={{
+    padding: "0 16px 20px"
+  }}>
+          <div style={{
+      fontSize: 12,
+      color: C.gray,
+      marginBottom: 16,
+      lineHeight: 1.5
+    }}>Mensajes generales para todos los colaboradores — distinto de las búsquedas de cliente. Aparecen arriba de su pantalla de Inicio hasta que cada uno los descarta.</div>
+          <div style={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 14
+    }}>
+            <span style={{
+        fontSize: 12.5,
+        fontWeight: 700,
+        color: C.gray,
+        letterSpacing: "0.07em",
+        textTransform: "uppercase"
+      }}>{(data.anuncios || []).length} publicados</span>
+            <button onClick={() => setShowAdd(!showAdd)} style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 4,
+        background: C.gold,
+        color: "white",
+        border: "none",
+        borderRadius: 8,
+        padding: "6px 12px",
+        fontSize: 13.5,
+        fontWeight: 700,
+        cursor: "pointer"
+      }}>
+              <Plus size={14} strokeWidth={2.5} /> Nuevo
+            </button>
+          </div>
+
+          {showAdd && <div style={{
+      background: C.white,
+      borderRadius: 14,
+      padding: "16px",
+      marginBottom: 14,
+      border: `1px solid ${C.border}`
+    }}>
+              <div style={{
+        fontSize: 14.5,
+        fontWeight: 700,
+        color: C.navy,
+        marginBottom: 12
+      }}>Nuevo anuncio</div>
+              <label style={{
+        fontSize: 12.5,
+        fontWeight: 600,
+        color: C.gray,
+        display: "block",
+        marginBottom: 6
+      }}>Título breve</label>
+              <input value={titulo} onChange={e => setTitulo(e.target.value)} placeholder="Ej: Nueva forma de contactarme" style={{
+        width: "100%",
+        padding: "10px 12px",
+        borderRadius: 9,
+        border: `1.5px solid ${C.border}`,
+        fontSize: 14.5,
+        color: C.navy,
+        outline: "none",
+        background: C.cream,
+        boxSizing: "border-box",
+        marginBottom: 10
+      }} />
+              <label style={{
+        fontSize: 12.5,
+        fontWeight: 600,
+        color: C.gray,
+        display: "block",
+        marginBottom: 6
+      }}>Mensaje</label>
+              <textarea value={mensaje} onChange={e => setMensaje(e.target.value)} placeholder="Escribe el mensaje que verán todos los colaboradores..." style={{
+        width: "100%",
+        padding: "10px 12px",
+        borderRadius: 9,
+        border: `1.5px solid ${C.border}`,
+        fontSize: 14.5,
+        color: C.navy,
+        outline: "none",
+        background: C.cream,
+        boxSizing: "border-box",
+        height: 80,
+        marginBottom: 12,
+        fontFamily: "inherit"
+      }} />
+              <div style={{
+        display: "flex",
+        gap: 8
+      }}>
+                <button onClick={() => setShowAdd(false)} style={{
+          flex: 1,
+          padding: "10px",
+          borderRadius: 9,
+          border: `1px solid ${C.border}`,
+          background: "white",
+          color: C.gray,
+          fontWeight: 600,
+          fontSize: 14.5,
+          cursor: "pointer"
+        }}>Cancelar</button>
+                <button onClick={handleAdd} style={{
+          flex: 1,
+          padding: "10px",
+          borderRadius: 9,
+          border: "none",
+          background: titulo.trim() && mensaje.trim() ? C.navy : "#D8DAE5",
+          color: "white",
+          fontWeight: 700,
+          fontSize: 14.5,
+          cursor: titulo.trim() && mensaje.trim() ? "pointer" : "default"
+        }}>Publicar</button>
+              </div>
+            </div>}
+
+          {sorted.length === 0 && !showAdd && <EmptyState emoji="📣" text="Aún no has publicado ningún anuncio" sub="Los colaboradores lo verán arriba de su Inicio" />}
+          {sorted.map(a => <div key={a.id} style={{
+      background: C.white,
+      borderRadius: 12,
+      padding: "14px",
+      marginBottom: 8,
+      border: `1px solid ${C.border}`,
+      opacity: a.activo ? 1 : 0.55
+    }}>
+              <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        marginBottom: 6
+      }}>
+                <span style={{
+          fontSize: 15,
+          fontWeight: 700,
+          color: C.navy
+        }}>{a.titulo}</span>
+                <button onClick={() => toggle(a.id)} style={{
+          background: a.activo ? C.redBg : C.greenBg,
+          color: a.activo ? C.red : C.green,
+          border: "none",
+          borderRadius: 7,
+          padding: "3px 8px",
+          fontSize: 12,
+          fontWeight: 700,
+          cursor: "pointer",
+          whiteSpace: "nowrap"
+        }}>
+                  {a.activo ? "Desactivar" : "Reactivar"}
+                </button>
+              </div>
+              <div style={{
+        fontSize: 13.5,
+        color: C.gray,
+        lineHeight: 1.45,
+        marginBottom: 4
+      }}>{a.mensaje}</div>
+              <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center"
+      }}>
+                <div style={{
+          fontSize: 12,
+          color: C.gray
+        }}>{a.fecha}</div>
+                <button onClick={() => setDifundir(a)} style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 5,
+          background: C.wa,
+          color: "white",
+          border: "none",
+          borderRadius: 7,
+          padding: "4px 10px",
+          fontSize: 11.5,
+          fontWeight: 700,
+          cursor: "pointer"
+        }}>
+                  <WAIcon size={12} /> Difundir
+                </button>
+              </div>
+            </div>)}
+          {difundir && <DifundirWhatsAppModal mensaje={mensajeDifusion(difundir)} onClose={() => setDifundir(null)} />}
+        </div>;
+}
+function A_Resumen({
+  data
+}) {
+  const avisos = data.avisos;
+  const cerrados = avisos.filter(a => a.estado === "cerrada");
+  const totalCom = cerrados.reduce((s, a) => s + (a.importe || 0), 0);
+  const porTipo = Object.keys(TIPOS).map(k => ({
+    tipo: k,
+    n: avisos.filter(a => a.tipo === k).length
+  }));
+  const ranking = data.conserjes.map(c => ({
+    ...c,
+    n: avisos.filter(a => a.conserjeId === c.id).length,
+    estrellas: totalEstrellas(avisos, c.id),
+    cobrado: avisos.filter(a => a.conserjeId === c.id && a.estado === "cerrada").reduce((s, a) => s + (a.importe || 0), 0)
+  })).sort((a, b) => b.estrellas - a.estrellas);
+  return <div style={{
+    padding: "0 16px 20px"
+  }}>
+          <div style={{
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: 10,
+      marginBottom: 16
+    }}>
+            <StatCard value={data.conserjes.length} label="Conserjes" sub="dados de alta" />
+            <StatCard value={avisos.length} label="Avisos totales" />
+            <StatCard value={cerrados.length} label="Operaciones cerradas" />
+            <StatCard value={`${totalCom}€`} label="Total comisiones" gold />
+          </div>
+
+          <div style={{
+      fontSize: 12.5,
+      fontWeight: 700,
+      color: C.gray,
+      letterSpacing: "0.07em",
+      textTransform: "uppercase",
+      marginBottom: 10
+    }}>Por tipo de aviso</div>
+          <div style={{
+      display: "flex",
+      gap: 8,
+      marginBottom: 20,
+      flexWrap: "wrap"
+    }}>
+            {porTipo.map(p => <div key={p.tipo} style={{
+        background: TIPOS[p.tipo].bg,
+        borderRadius: 10,
+        padding: "8px 12px",
+        flex: "1 1 40%"
+      }}>
+                <div style={{
+          fontSize: 17,
+          fontWeight: 800,
+          color: TIPOS[p.tipo].color
+        }}>{p.n}</div>
+                <div style={{
+          fontSize: 12,
+          color: TIPOS[p.tipo].color,
+          fontWeight: 600
+        }}>{TIPOS[p.tipo].emoji} {TIPOS[p.tipo].label}</div>
+              </div>)}
+          </div>
+
+          <div style={{
+      fontSize: 12.5,
+      fontWeight: 700,
+      color: C.gray,
+      letterSpacing: "0.07em",
+      textTransform: "uppercase",
+      marginBottom: 12
+    }}>Ranking colaboradores</div>
+          {ranking.length === 0 && <EmptyState emoji="🏆" text="Sin datos aún" />}
+          {ranking.map((c, i) => <div key={c.id} style={{
+      background: C.white,
+      borderRadius: 12,
+      padding: "12px 14px",
+      marginBottom: 7,
+      border: `1px solid ${C.border}`,
+      display: "flex",
+      alignItems: "center",
+      gap: 12
+    }}>
+              <div style={{
+        width: 22,
+        fontSize: 14.5,
+        fontWeight: 700,
+        color: i < 3 ? C.gold : C.gray,
+        textAlign: "center",
+        flexShrink: 0
+      }}>#{i + 1}</div>
+              <div style={{
+        width: 34,
+        height: 34,
+        borderRadius: "50%",
+        background: c.activo ? C.navy : "#D8DAE5",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        fontSize: 13.5,
+        fontWeight: 700,
+        color: "white",
+        flexShrink: 0
+      }}>{initials(c.nombre)}</div>
+              <div style={{
+        flex: 1
+      }}>
+                <div style={{
+          fontSize: 14.5,
+          fontWeight: 600,
+          color: c.activo ? C.navy : C.gray
+        }}>{c.nombre}</div>
+                <div style={{
+          fontSize: 12.5,
+          color: C.gray
+        }}>{c.n} avisos · {c.cobrado}€ cobrado</div>
+              </div>
+              <div style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 4,
+        flexShrink: 0
+      }}>
+                <Star size={14} color={C.gold} />
+                <span style={{
+          fontSize: 15.5,
+          fontWeight: 800,
+          color: C.gold
+        }}>{c.estrellas}</span>
+              </div>
+            </div>)}
+        </div>;
+}
+const A_TABS = [{
+  id: "conserjes",
+  label: "Conserjes",
+  Icon: Users
+}, {
+  id: "avisos",
+  label: "Avisos",
+  Icon: ClipList
+}, {
+  id: "alertas",
+  label: "Alertas",
+  Icon: Bell
+}, {
+  id: "anuncios",
+  label: "Anuncios",
+  Icon: Megaphone
+}, {
+  id: "resumen",
+  label: "Resumen",
+  Icon: TrendingUp
+}];
+function AdminApp({
+  data,
+  runAction,
+  onLogout
+}) {
+  const [tab, setTab] = useState("conserjes");
+  const [toast, setToast] = useState(null);
+  const fire = m => {
+    setToast(m);
+    setTimeout(() => setToast(null), 2800);
+  };
+  const avisosPendientes = data.avisos.filter(a => a.estado === "pendiente").length;
+  return <AppShell header={<div style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "flex-end"
+  }}>
+              <div>
+                <div style={{
+        fontSize: 11.5,
+        color: "rgba(255,255,255,0.5)",
+        letterSpacing: "0.1em",
+        textTransform: "uppercase",
+        marginBottom: 2
+      }}>Panel de administración</div>
+                <div style={{
+        fontSize: 19,
+        fontWeight: 700,
+        color: "white"
+      }}>Spitia+</div>
+              </div>
+              <button onClick={onLogout} style={{
+      background: "rgba(255,255,255,0.1)",
+      border: "none",
+      borderRadius: 8,
+      padding: "6px 10px",
+      color: "rgba(255,255,255,0.7)",
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      gap: 5,
+      fontSize: 12.5
+    }}>
+                <LogOut size={14} /> Salir
+              </button>
+            </div>} nav={A_TABS.map(t => <NavBtn key={t.id} active={tab === t.id} label={t.label} Icon={t.Icon} badge={t.id === "avisos" ? avisosPendientes : 0} onClick={() => setTab(t.id)} />)}>
+          {tab === "conserjes" && <A_Conserjes data={data} runAction={runAction} fire={fire} />}
+          {tab === "avisos" && <A_Avisos data={data} runAction={runAction} fire={fire} />}
+          {tab === "alertas" && <A_Alertas data={data} runAction={runAction} fire={fire} />}
+          {tab === "anuncios" && <A_Anuncios data={data} runAction={runAction} fire={fire} />}
+          {tab === "resumen" && <A_Resumen data={data} />}
+          {toast && <Toast msg={toast} />}
+        </AppShell>;
+}
+function App() {
+  const [appData, setAppData] = useState({
+    conserjes: [],
+    avisos: [],
+    alertas: [],
+    anuncios: []
+  });
+  const [booting, setBooting] = useState(true);
+  const [session, setSession] = useState(null);
+  const [screen, setScreen] = useState("welcome");
+  const [loginError, setLoginError] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [justRegistered, setJustRegistered] = useState(null);
+  const [retryingSession, setRetryingSession] = useState(false);
+  useEffect(() => {
+    setRetryingSession(false);
+  }, [session && session.id]);
+  useEffect(() => {
+    const saved = Session.get();
+    if (saved && saved.type === "conserje") {
+      DB.loadForConserje(saved.id).then(data => {
+        setAppData(data);
+        setSession(saved);
+        setBooting(false);
+      });
+    } else {
+      setBooting(false);
+    }
+  }, []);
+  useEffect(() => {
+    if (!session) return;
+    const tick = async () => {
+      const data = session.type === "admin" ? await DB.loadAll() : await DB.loadForConserje(session.id);
+      if (data) setAppData(data);
+    };
+    const id = setInterval(tick, 8000);
+    return () => clearInterval(id);
+  }, [session]);
+  const handleRegister = async (nombre, sector, edificio, telefono, pin) => {
+    setLoginLoading(true);
+    try {
+      const id = genCode();
+      const nuevo = {
+        id,
+        nombre,
+        sector,
+        edificio,
+        telefono,
+        pin,
+        activo: true,
+        fechaAlta: fdate()
+      };
+      await Actions.addConserje(id, nuevo);
+      const data = await DB.loadForConserje(id);
+      setAppData(data);
+      Session.set({
+        type: "conserje",
+        id
+      });
+      setJustRegistered({
+        code: id,
+        nombre,
+        pin
+      });
+      setSession({
+        type: "conserje",
+        id
+      });
+    } catch (e) {
+      alert(e.message || "No se pudo completar el alta. Comprueba tu conexión e inténtalo de nuevo.");
+    }
+    setLoginLoading(false);
+  };
+  const handleLogin = async payload => {
+    setLoginLoading(true);
+    setLoginError("");
+    if (screen === "loginAdmin") {
+      try {
+        await Auth.signInAdmin(payload.email, payload.password);
+        const data = await DB.loadAll();
+        setAppData(data);
+        setSession({
+          type: "admin"
+        });
+      } catch (e) {
+        setLoginError(e.message || "No se pudo iniciar sesión.");
+      }
+      setLoginLoading(false);
+      return;
+    }
+    try {
+      const record = await DB.fetchConserje(payload.code);
+      if (record && record.activo && (!record.pin || record.pin === payload.pin)) {
+        const data = await DB.loadForConserje(payload.code);
+        setAppData(data);
+        Session.set({
+          type: "conserje",
+          id: payload.code
+        });
+        setSession({
+          type: "conserje",
+          id: payload.code
+        });
+      } else {
+        setLoginError("Código o PIN incorrectos.");
+      }
+    } catch (e) {
+      setLoginError(`No se pudo comprobar el código. Contacta con ${KN.agente}.`);
+    }
+    setLoginLoading(false);
+  };
+  const handleLogout = () => {
+    Auth.signOut();
+    Session.clear();
+    setSession(null);
+    setScreen("welcome");
+    setJustRegistered(null);
+  };
+  const addAviso = async (tipo, dir, notas) => {
+    const aviso = {
+      conserjeId: session.id,
+      tipo,
+      dir,
+      notas,
+      estado: "pendiente",
+      importe: null,
+      validado: false,
+      fecha: fdate()
+    };
+    try {
+      const updated = await Actions.pushItem(appData, "avisos", aviso);
+      setAppData(updated);
+    } catch (e) {
+      alert(e.message || "No se pudo registrar el aviso. Comprueba tu conexión e inténtalo de nuevo.");
+    }
+  };
+  const solicitarBajaDatos = async () => {
+    try {
+      const updated = await Actions.patchConserje(appData, session.id, {
+        bajaSolicitada: true,
+        fechaBaja: fdate()
+      });
+      setAppData(updated);
+    } catch (e) {
+      alert(e.message || "No se pudo enviar la solicitud. Inténtalo de nuevo.");
+      return;
+    }
+    handleLogout();
+  };
+  const runAction = async fn => {
+    try {
+      const updated = await fn(appData);
+      setAppData(updated);
+    } catch (e) {
+      alert(e.message || "No se pudo guardar. Si ha pasado un rato, cierra sesión y vuelve a entrar como admin.");
+    }
+  };
+  if (booting) {
+    return <div style={{
+      maxWidth: 440,
+      margin: "0 auto",
+      height: "100vh",
+      background: C.navy,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }}>
+            <div style={{
+        textAlign: "center",
+        color: "white"
+      }}>
+              <div style={{
+          fontSize: 36.5,
+          marginBottom: 14
+        }}>🔑</div>
+              <div style={{
+          fontSize: 14.5,
+          opacity: 0.5
+        }}>Cargando...</div>
+            </div>
+          </div>;
+  }
+  if (!session) {
+    if (screen === "welcome") return <WelcomeScreen onGoRegister={() => setScreen("register")} onGoLogin={() => {
+      setLoginError("");
+      setScreen("login");
+    }} onGoAdmin={() => {
+      setLoginError("");
+      setScreen("loginAdmin");
+    }} />;
+    if (screen === "register") return <RegisterScreen onBack={() => setScreen("welcome")} onSubmit={handleRegister} loading={loginLoading} />;
+    if (screen === "login") return <LoginScreen onBack={() => setScreen("welcome")} onLogin={handleLogin} error={loginError} loading={loginLoading} isAdmin={false} />;
+    if (screen === "loginAdmin") return <LoginScreen onBack={() => setScreen("welcome")} onLogin={handleLogin} error={loginError} loading={loginLoading} isAdmin={true} />;
+    return <WelcomeScreen onGoRegister={() => setScreen("register")} onGoLogin={() => setScreen("login")} onGoAdmin={() => setScreen("loginAdmin")} />;
+  }
+  if (session.type === "admin") return <AdminApp data={appData} runAction={runAction} onLogout={handleLogout} />;
+  const conserje = appData.conserjes.find(c => c.id === session.id);
+  if (!conserje) {
+    if (!retryingSession) {
+      setRetryingSession(true);
+      DB.loadForConserje(session.id).then(fresh => setAppData(fresh));
+      return <div style={{
+        maxWidth: 440,
+        margin: "0 auto",
+        height: "100vh",
+        background: C.navy,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
+              <div style={{
+          textAlign: "center",
+          color: "white"
+        }}>
+                <div style={{
+            fontSize: 36.5,
+            marginBottom: 14
+          }}>🔑</div>
+                <div style={{
+            fontSize: 14.5,
+            opacity: 0.5
+          }}>Comprobando tu sesión...</div>
+              </div>
+            </div>;
+    }
+    handleLogout();
+    return null;
+  }
+  const misAvisos = appData.avisos.filter(a => a.conserjeId === session.id);
+  return <ConserjeApp conserje={conserje} avisos={misAvisos} alertas={appData.alertas} anuncios={appData.anuncios} onAddAviso={addAviso} onLogout={handleLogout} onSolicitarBaja={solicitarBajaDatos} justRegistered={justRegistered} onDismissWelcome={() => setJustRegistered(null)} />;
+}
+console.log("%c⚠️ ESTO ES EL ENTORNO DE PRUEBAS — Spitia+ TEST build 2026-09-24-b", "color:#C0392B;font-weight:bold;font-size:14px");
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);</script>
+</body>
+</html>
