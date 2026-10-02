@@ -8,10 +8,10 @@ importScripts("https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-com
 
 // Mismos datos que en test-index.html — si cambias uno, cambia el otro también.
 firebase.initializeApp({
-  apiKey: "TU_API_KEY_DE_PRUEBAS",
-  projectId: "TU_PROJECT_ID_DE_PRUEBAS",
-  messagingSenderId: "TU_SENDER_ID_DE_PRUEBAS",
-  appId: "TU_APP_ID_DE_PRUEBAS"
+  apiKey: "AIzaSyBMcOkCD9KPp0lhNtw-875dpfrSEw8HnWk",
+  projectId: "spitia-ee",
+  messagingSenderId: "181665299641",
+  appId: "1:181665299641:web:9b12a75b4fee1d6e112f68"
 });
 
 const messaging = firebase.messaging();
